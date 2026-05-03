@@ -37,7 +37,7 @@ function Counter({ value, label }: CounterProps) {
     }
   }, [isInView, value]);
 
-  const displayValue = typeof value === 'string' ? value : count;
+  const displayValue = typeof value === 'string' ? value : count.toLocaleString();
 
   return (
     <div ref={ref} className="text-center group">

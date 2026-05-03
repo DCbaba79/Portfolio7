@@ -104,8 +104,8 @@ export const SKILLS: Skill[] = [
 ];
 
 export const STATS = [
-  { label: "Years Experience", value: 2 },
+  { label: "Views Generated", value: 50000 },
+  { label: "Happy Clients", value: 10 },
   { label: "Projects Completed", value: 20 },
-  { label: "Clients Served", value: 10 },
-  { label: "Views Generated", value: "50K" },
+  { label: "Years Experience", value: 2 },
 ];
