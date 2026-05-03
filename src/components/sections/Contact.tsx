@@ -16,7 +16,7 @@ const ContactTile = ({ icon: Icon, label, value, href, colorClass, hoverBg }: an
         target="_blank"
         rel="noopener noreferrer"
         className={cn(
-          "flex-shrink-0 w-24 h-24 flex items-center justify-center glass-card rounded-[2rem] overflow-hidden outline outline-1 outline-white/5 transition-all duration-500 hover:glow-border group-hover:scale-110 group-hover:-translate-y-2",
+          "flex-shrink-0 w-14 h-14 md:w-24 md:h-24 flex items-center justify-center glass-card rounded-[1rem] md:rounded-[2rem] overflow-hidden outline outline-1 outline-white/5 transition-all duration-500 hover:glow-border group-hover:scale-110 group-hover:-translate-y-2",
           colorClass
         )}
       >
@@ -24,7 +24,7 @@ const ContactTile = ({ icon: Icon, label, value, href, colorClass, hoverBg }: an
           "w-full h-full flex items-center justify-center transition-all duration-500 group-hover:text-[#050505]",
           hoverBg
         )}>
-          <Icon size={32} />
+          <Icon size={18} className="md:w-8 md:h-8" />
         </div>
       </motion.a>
 
@@ -45,15 +45,15 @@ const ContactTile = ({ icon: Icon, label, value, href, colorClass, hoverBg }: an
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-32 px-6 max-w-7xl mx-auto">
-      <div className="glass-card rounded-[3.5rem] p-12 md:p-24 overflow-hidden relative border-white/10 glow-border">
+    <section id="contact" className="py-8 md:py-32 px-4 md:px-6 max-w-7xl mx-auto">
+      <div className="glass-card rounded-[1.5rem] md:rounded-[3.5rem] p-4 md:p-24 overflow-hidden relative border-white/10 glow-border">
         {/* Glow effect */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 blur-[150px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 relative z-10">
           <div>
-            <h2 className="text-[11px] uppercase tracking-[0.4em] text-primary font-bold mb-6">Connect</h2>
-            <h3 className="text-6xl md:text-8xl font-display font-black leading-[0.9] tracking-tighter mb-10">
+            <h2 className="text-[8px] md:text-[11px] uppercase tracking-[0.4em] text-primary font-bold mb-3 md:mb-6">Connect</h2>
+            <h3 className="text-2xl md:text-8xl font-display font-black leading-[0.9] tracking-tighter mb-4 md:mb-10">
               {"LET'S MAKE ".split(" ").map((word, i) => (
                 <span key={i} className="hover-outline mr-4">{word}</span>
               ))}
@@ -91,37 +91,37 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="glass-card p-10 md:p-12 rounded-[3.5rem] border-white/5 shadow-2xl">
-            <h4 className="text-2xl font-display font-black mb-8 tracking-tighter">PROJECT INQUIRY</h4>
-            <form className="space-y-8">
-              <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold text-white/40 ml-4">Full Name</label>
+          <div className="glass-card p-4 md:p-12 rounded-[1.5rem] md:rounded-[3.5rem] border-white/5 shadow-2xl">
+            <h4 className="text-base md:text-2xl font-display font-black mb-4 md:mb-8 tracking-tighter">PROJECT INQUIRY</h4>
+            <form className="space-y-4 md:space-y-8">
+              <div className="space-y-1 md:space-y-2">
+                <label className="text-[8px] md:text-[10px] uppercase font-bold text-white/40 ml-4">Full Name</label>
                 <input 
                   type="text" 
                   placeholder="John Doe" 
-                  className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-primary transition-colors text-white"
+                  className="w-full px-4 py-3 md:px-6 md:py-4 bg-white/5 border border-white/10 rounded-xl md:rounded-2xl focus:outline-none focus:border-primary transition-colors text-white text-sm"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold text-white/40 ml-4">Email Address</label>
+              <div className="space-y-1 md:space-y-2">
+                <label className="text-[8px] md:text-[10px] uppercase font-bold text-white/40 ml-4">Email Address</label>
                 <input 
                   type="email" 
                   placeholder="john@example.com" 
-                  className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-primary transition-colors text-white"
+                  className="w-full px-4 py-3 md:px-6 md:py-4 bg-white/5 border border-white/10 rounded-xl md:rounded-2xl focus:outline-none focus:border-primary transition-colors text-white text-sm"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold text-white/40 ml-4">Your Project Details</label>
+              <div className="space-y-1 md:space-y-2">
+                <label className="text-[8px] md:text-[10px] uppercase font-bold text-white/40 ml-4">Your Project Details</label>
                 <textarea 
                   rows={4} 
                   placeholder="Tell me about your amazing project..." 
-                  className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-primary transition-colors text-white resize-none"
+                  className="w-full px-4 py-3 md:px-6 md:py-4 bg-white/5 border border-white/10 rounded-xl md:rounded-2xl focus:outline-none focus:border-primary transition-colors text-white resize-none text-sm"
                 />
               </div>
               
-              <button className="w-full py-5 bg-primary rounded-2xl font-sans font-black text-lg flex items-center justify-center gap-3 hover:bg-primary/80 transition-all hover:scale-[1.02] group">
+              <button className="w-full py-4 bg-primary rounded-xl md:rounded-2xl font-sans font-black text-base flex items-center justify-center gap-3 hover:bg-primary/80 transition-all hover:scale-[1.02] group">
                 SEND MESSAGE 
-                <Send size={18} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                <Send size={16} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
               </button>
             </form>
           </div>

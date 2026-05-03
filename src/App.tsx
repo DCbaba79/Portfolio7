@@ -11,6 +11,7 @@ import Hero from './components/sections/Hero';
 import Portfolio from './components/sections/Portfolio';
 import Experience from './components/sections/Experience';
 import Skills from './components/sections/Skills';
+import Roles from './components/sections/Roles';
 import Contact from './components/sections/Contact';
 import FloatingAvatar from './components/FloatingAvatar';
 
@@ -175,6 +176,7 @@ export default function App() {
             <Portfolio />
             <Experience />
             <Skills />
+            <Roles />
             <Contact />
           </Layout>
         )}

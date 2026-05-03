@@ -68,12 +68,12 @@ export default function Portfolio() {
   };
 
   return (
-    <section id="work" className="py-24 overflow-hidden relative group/section">
-      <div className="max-w-7xl mx-auto px-6 mb-16">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <section id="work" className="py-8 md:py-24 overflow-hidden relative group/section">
+      <div className="max-w-7xl mx-auto px-6 mb-6 md:mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-8">
           <div>
-            <h2 className="text-[11px] uppercase tracking-[0.4em] text-primary font-bold mb-4">Portfolio</h2>
-            <h3 className="text-3xl md:text-5xl font-display font-black leading-none tracking-tight">
+            <h2 className="text-[8px] md:text-[11px] uppercase tracking-[0.4em] text-primary font-bold mb-2 md:mb-4">Portfolio</h2>
+            <h3 className="text-base md:text-5xl font-display font-black leading-none tracking-tight">
               {"SELECTED ".split(" ").map((word, i) => (
                 <span key={i} className="hover-outline mr-2">{word}</span>
               ))}
@@ -116,12 +116,12 @@ export default function Portfolio() {
               const sensitivity = 0.08; 
               baseX.set(baseX.get() + info.delta.x * sensitivity); 
             }}
-            className="flex gap-8 px-4"
+            className="flex gap-4 md:gap-8 px-4"
           >
             {tripledProjects.map((project, i) => (
               <motion.div
                 key={`${project.id}-${i}`}
-                className="relative w-[300px] md:w-[450px] aspect-[16/10] glass-card rounded-[2.5rem] overflow-hidden group glow-border flex-shrink-0"
+                className="relative w-[260px] md:w-[450px] aspect-[16/10] glass-card rounded-[2rem] md:rounded-[2.5rem] overflow-hidden group glow-border flex-shrink-0"
                 onClick={() => {
                   if (!isDragging.current) {
                     setSelectedProject(project);

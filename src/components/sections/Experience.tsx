@@ -41,7 +41,7 @@ function Counter({ value, label }: CounterProps) {
 
   return (
     <div ref={ref} className="text-center group">
-      <div className="text-4xl md:text-6xl font-display font-black text-white mb-2 tracking-tighter transition-colors">
+      <div className="text-2xl md:text-6xl font-display font-black text-white mb-2 tracking-tighter transition-colors">
         <span className="hover-outline">{displayValue}+</span>
       </div>
       <div className="text-[10px] font-bold uppercase tracking-[0.4em] text-gray-500">
@@ -55,7 +55,7 @@ function Counter({ value, label }: CounterProps) {
 
 export default function Experience() {
   return (
-    <section id="stats" className="py-32 bg-white/[0.02] border-y border-white/5">
+    <section id="stats" className="py-20 md:py-32 bg-white/[0.02] border-y border-white/5">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-16">
         {STATS.map((stat) => (
           <Counter key={stat.label} value={stat.value} label={stat.label} />

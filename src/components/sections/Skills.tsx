@@ -14,7 +14,7 @@ const SkillTile = ({ skill, index }: { skill: Skill, index: number }) => {
       className="relative group flex flex-col items-center"
     >
       <div className={cn(
-        "flex-shrink-0 w-24 h-24 flex items-center justify-center bg-[#111111] rounded-[2rem] overflow-hidden border border-white/5 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110 group-hover:-translate-y-3 cursor-pointer",
+        "flex-shrink-0 w-14 h-14 md:w-24 md:h-24 flex items-center justify-center bg-[#111111] rounded-[1rem] md:rounded-[2rem] overflow-hidden border border-white/5 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110 group-hover:-translate-y-3 cursor-pointer",
         index % 2 === 0 
           ? "group-hover:bg-primary group-hover:shadow-[0_0_30px_-5px_rgba(20,184,166,0.8)] group-hover:border-primary/50" 
           : "group-hover:bg-orange-500 group-hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.8)] group-hover:border-orange-500/50"
@@ -24,7 +24,7 @@ const SkillTile = ({ skill, index }: { skill: Skill, index: number }) => {
             <img 
               src={skill.logo} 
               alt={skill.name} 
-              className="w-12 h-12 object-contain transition-all duration-500"
+              className="w-7 h-7 md:w-12 md:h-12 object-contain transition-all duration-500"
               referrerPolicy="no-referrer"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -56,10 +56,10 @@ const SkillTile = ({ skill, index }: { skill: Skill, index: number }) => {
 
 export default function Skills() {
   return (
-    <section id="skills" className="py-32 px-6 max-w-7xl mx-auto">
-      <div className="flex flex-col lg:flex-row gap-20">
+    <section id="skills" className="py-8 md:py-32 px-6 max-w-7xl mx-auto">
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-20">
         <div className="lg:w-2/5">
-          <h3 className="text-3xl md:text-5xl font-display font-black leading-none tracking-tight mb-10">
+          <h3 className="text-lg md:text-5xl font-display font-black leading-none tracking-tight mb-3 md:mb-10">
             {"THE ".split(" ").map((word, i) => (
               <span key={i} className="hover-outline mr-2">{word}</span>
             ))}

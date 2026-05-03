@@ -57,13 +57,13 @@ export default function Navbar() {
       scrolled ? "py-4 bg-[#050505]/80 backdrop-blur-xl" : "py-10 bg-transparent"
     )}>
       <div className="max-w-7xl mx-auto px-10 flex justify-between items-center">
-        <motion.a 
+        <motion.a
           href="#"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-4 group"
+          className="flex items-center gap-2 md:gap-4 group"
         >
-          <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
+          <div className="w-7 h-7 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
             <img 
               src="https://i.postimg.cc/50nzByRk/Chat-GPT-Image-May-2-2026-12-06-49-AM.png" 
               alt="Logo" 
@@ -74,14 +74,14 @@ export default function Navbar() {
                 const parent = target.parentElement;
                 if (parent) {
                   const span = document.createElement('span');
-                  span.className = "font-black text-white";
+                  span.className = "font-black text-white text-[10px] md:text-base";
                   span.innerText = "DS";
                   parent.appendChild(span);
                 }
               }}
             />
           </div>
-          <span className="text-xl font-black tracking-tighter uppercase text-white group-hover:text-primary transition-colors">DHYAN SALAVI</span>
+          <span className="text-sm md:text-xl font-black tracking-tighter uppercase text-white group-hover:text-primary transition-colors">DHYAN SALAVI</span>
         </motion.a>
 
         {/* Desktop Nav */}

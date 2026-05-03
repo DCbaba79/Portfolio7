@@ -22,20 +22,20 @@ export default function Hero() {
 
       <motion.div 
         style={{ y: y1, opacity }}
-        className="relative z-10 max-w-5xl mx-auto px-6 text-center"
+        className="relative z-10 max-w-5xl mx-auto px-4 md:px-6 text-center"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 px-4 py-2 glass-card rounded-full text-[10px] uppercase tracking-[0.4em] font-bold text-primary mb-8"
+          className="inline-flex items-center gap-2 px-2.5 py-1 md:px-4 md:py-2 glass-card rounded-full text-[8px] md:text-[10px] uppercase tracking-[0.4em] font-bold text-primary mb-4 md:mb-8"
         >
-          <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(13,148,136,0.5)]" />
+          <div className="w-1 h-1 md:w-2 md:h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(13,148,136,0.5)]" />
           Premium Video Editor
         </motion.div>
 
         <motion.h1 
-          className="text-4xl md:text-6xl font-display font-black leading-[0.85] tracking-tighter mb-8 select-none"
+          className="text-xl md:text-6xl font-display font-black leading-[0.9] md:leading-[0.85] tracking-tighter mb-4 md:mb-8 select-none"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -67,7 +67,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="max-w-2xl mx-auto text-base md:text-lg text-gray-400 mb-10 leading-relaxed font-light cursor-default"
+          className="max-w-2xl mx-auto text-xs md:text-lg text-gray-400 mb-8 md:mb-10 leading-relaxed font-light cursor-default px-4 md:px-0"
         >
           <WordHighlighter text="Crafting high-impact cinematic visuals for brands, creators, and elite gaming startups." />
         </motion.p>
@@ -76,7 +76,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-6"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6"
         >
           <a 
             href="#work"
@@ -84,7 +84,7 @@ export default function Hero() {
               e.preventDefault();
               document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="group px-10 py-5 bg-primary text-white rounded-full font-bold transition-all shadow-xl shadow-primary/20 hover:scale-105"
+            className="group px-8 py-4 md:px-10 md:py-5 bg-primary text-white rounded-full font-bold transition-all shadow-xl shadow-primary/20 hover:scale-105 text-sm md:text-base"
           >
             View My Work
           </a>
@@ -94,7 +94,7 @@ export default function Hero() {
               e.preventDefault();
               document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="group px-10 py-5 glass-card rounded-full font-bold hover:bg-white/10 transition-all border-white/10"
+            className="group px-8 py-4 md:px-10 md:py-5 glass-card rounded-full font-bold hover:bg-white/10 transition-all border-white/10 text-sm md:text-base"
           >
             Hire Me
           </a>
