@@ -104,7 +104,11 @@ export const SKILLS: Skill[] = [
 ];
 
 export const STATS = [
+<<<<<<< HEAD
   { label: "Views Generated", value: 300000 },
+=======
+  { label: "Views Generated", value: 50000 },
+>>>>>>> 86542fd2cc001df76b4b4b74d7316e9e58251a4c
   { label: "Happy Clients", value: 10 },
   { label: "Projects Completed", value: 20 },
   { label: "Years Experience", value: 2 },

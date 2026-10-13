@@ -113,7 +113,11 @@ export default function Hero() {
           </div>
           <div>
             <p className="text-[10px] text-white/40 uppercase font-bold">Generated</p>
+<<<<<<< HEAD
             <p className="text-base font-sans font-bold">300,000+ Views</p>
+=======
+            <p className="text-base font-sans font-bold">50,000+ Views</p>
+>>>>>>> 86542fd2cc001df76b4b4b74d7316e9e58251a4c
           </div>
         </div>
       </motion.div>
