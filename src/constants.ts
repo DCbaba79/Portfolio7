@@ -23,13 +23,13 @@ export const PROJECTS: Project[] = [
     skills: ["Motion Graphics", "Data Viz", "Storytelling"],
   },
   {
-    id: "valorant",
-    title: "Valorant Clutch Edit",
-    category: "Gaming",
-    thumbnail: "https://i.postimg.cc/5tpZ4qsr/OIP-1.webp",
-    videoUrl: "https://drive.google.com/file/d/1R0d_BAkBbaFMIsMAem4sMZdWRhlEwRCz/view?usp=sharing",
-    description: "High-octane gaming montage with beat-syncing and energetic transitions.",
-    skills: ["Beat Sync", "Masking", "Sfx"],
+    id: "gut-story",
+    title: "MindFlora",
+    category: "Commercial",
+    thumbnail: "https://i.postimg.cc/yNVcPTnZ/Screenshot-2026-10-13-152217.png",
+    videoUrl: "",
+    description: "High-retention commercial reel explaining probiotic science with kinetic typography, motion graphics, and dynamic visual pacing.",
+    skills: ["Kinetic Typography", "Motion Graphics", "Sound Design"],
   },
   {
     id: "worn-out",
@@ -104,8 +104,8 @@ export const SKILLS: Skill[] = [
 ];
 
 export const STATS = [
-  { label: "Years Experience", value: 2 },
+  { label: "Views Generated", value: 300000 },
+  { label: "Happy Clients", value: 10 },
   { label: "Projects Completed", value: 20 },
-  { label: "Clients Served", value: 10 },
-  { label: "Views Generated", value: "50K" },
+  { label: "Years Experience", value: 2 },
 ];
