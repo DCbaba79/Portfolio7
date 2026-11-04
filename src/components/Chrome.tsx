@@ -96,7 +96,7 @@ export default function Chrome() {
     requestAnimationFrame(() => scrollToTarget(id));
   };
 
-  // J / L shuttle, the way editors move through a timeline:
+  // Q / E shuttle, under the left hand like a game's prev/next:
   // on the home page they jump between chapters, on a case page between clips.
   const { navigate } = useRouter();
   useEffect(() => {
@@ -105,8 +105,8 @@ export default function Chrome() {
       const t = e.target as HTMLElement;
       if (t.closest('input, textarea, [contenteditable="true"], [role="slider"]')) return;
       const k = e.key.toLowerCase();
-      if (k !== 'j' && k !== 'l') return;
-      const dir = k === 'l' ? 1 : -1;
+      if (k !== 'q' && k !== 'e') return;
+      const dir = k === 'e' ? 1 : -1;
       if (home) {
         const i = MARKERS.findIndex((m) => m.id === active);
         const next = MARKERS[Math.min(MARKERS.length - 1, Math.max(0, i + dir))];
@@ -142,8 +142,8 @@ export default function Chrome() {
             <span className="label mt-1 block text-paper/50">
               {home ? activeLabel : 'Case file'}
             </span>
-            <span className="tc mt-2 hidden text-[10px] text-paper/30 lg:block" title="Shuttle like an editor">
-              <kbd className="border border-paper/25 px-1">J</kbd> <kbd className="border border-paper/25 px-1">L</kbd> shuttle
+            <span className="tc mt-2 hidden text-[10px] text-paper/30 lg:block" title="Q previous · E next">
+              <kbd className="border border-paper/25 px-1">Q</kbd> <kbd className="border border-paper/25 px-1">E</kbd> shuttle
             </span>
           </div>
           {home ? (

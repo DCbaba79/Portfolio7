@@ -60,9 +60,16 @@ export default function Credits() {
         {/* software */}
         <Fade className="mt-16 border-y border-paper/10 py-10">
           <span className="label text-paper/45">Primary software</span>
-          <p className="mt-3 text-[clamp(1.8rem,4vw,3rem)] font-semibold tracking-[-0.04em]">
+          <p className="mt-4 flex items-center justify-center gap-4 text-[clamp(1.8rem,4vw,3rem)] font-semibold tracking-[-0.04em]">
+            <img
+              src="/media/davinci-resolve.webp"
+              alt=""
+              width={192}
+              height={192}
+              loading="lazy"
+              className="h-[1.5em] w-[1.5em] shrink-0"
+            />
             {TOOLS.primary}
-            <span className="tc ml-2 align-middle text-[0.4em] font-normal text-teal-3">.drp</span>
           </p>
           <p className="mt-3 text-[14px] text-paper/55">Also on the timeline: {TOOLS.also.join(' · ')}</p>
         </Fade>
