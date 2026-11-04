@@ -1,40 +1,69 @@
-import { motion, useMotionValue, useScroll, useSpring, useTransform, useMotionTemplate } from 'motion/react';
+import { motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { PROJECTS } from '../../constants';
 import { PROFILE } from '../../data/profile';
 import { scrollToTarget } from '../../lib/scroll';
-import { useFinePointer, useReducedMotion, range } from '../../lib/hooks';
+import { useReducedMotion, range } from '../../lib/hooks';
 import Magnetic from '../ui/Magnetic';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-const CUT_MS = 720; // hard-cut rhythm inside the type
+const CUT_MS = 2600; // how long each still holds inside the type
+const DISSOLVE_MS = 1100;
 
 /**
  * Signature sequence. The tagline "STORIES THAT SELL." is set huge, with real
- * project stills hard-cutting inside the letterforms. Scrolling pushes the
- * camera through the type until the footage fills the frame and hands over
- * to the work exhibition.
+ * project stills dissolving inside the letterforms. Scrolling freezes the
+ * frame and pushes the camera through the type until the footage fills the
+ * screen and hands over to the work exhibition.
+ *
+ * Two stacked copies of the word act as A/B roll: only opacity animates, and
+ * the hidden copy swaps its still while invisible, so nothing repaints on screen.
  */
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
-  const fine = useFinePointer();
   const [cut, setCut] = useState(0);
+  const [roll, setRoll] = useState<[number, number]>([0, 1]); // still index on A / B
+  const [front, setFront] = useState<0 | 1>(0);
+  const paused = useRef(false);
   const still = PROJECTS[cut].thumbnail;
 
+  const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] });
+  useMotionValueEvent(p, 'change', (v) => { paused.current = v > 0.02; });
+
   useEffect(() => {
-    // Warm the cache so cuts are instant
-    PROJECTS.forEach((p) => { const i = new Image(); i.src = p.thumbnail; });
+    // Warm the cache so every dissolve has its frame ready
+    PROJECTS.forEach((pr) => { const i = new Image(); i.decoding = 'async'; i.src = pr.thumbnail; });
+  }, []);
+
+  useEffect(() => {
     if (reduced) return;
-    const t = setInterval(() => setCut((c) => (c + 1) % PROJECTS.length), CUT_MS);
-    return () => clearInterval(t);
+    let swap: ReturnType<typeof setTimeout>;
+    const state = { cut: 0, front: 0 as 0 | 1 };
+    const t = setInterval(() => {
+      if (paused.current || document.hidden) return;
+      const next = (state.cut + 1) % PROJECTS.length;
+      const shown = (1 - state.front) as 0 | 1;
+      const hidden = state.front;
+      state.cut = next;
+      state.front = shown;
+      setCut(next);
+      setFront(shown);
+      // Once the dissolve finishes, load the following still into the now-hidden roll
+      swap = setTimeout(() => {
+        setRoll((r) => {
+          const copy = [...r] as [number, number];
+          copy[hidden] = (next + 1) % PROJECTS.length;
+          return copy;
+        });
+      }, DISSOLVE_MS + 50);
+    }, CUT_MS);
+    return () => { clearInterval(t); clearTimeout(swap); };
   }, [reduced]);
 
-  const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] });
-
   // Camera push through the word
-  const wordScale = useTransform(p, range([0, 0.7], [1, 7]));
+  const wordScale = useTransform(p, range([0, 0.7], [1, 5]));
   const wordOpacity = useTransform(p, range([0.55, 0.72], [1, 0]));
   const chromeOpacity = useTransform(p, range([0, 0.18], [1, 0]));
   const chromeY = useTransform(p, range([0, 0.18], [0, -40]));
@@ -43,12 +72,18 @@ export default function Hero() {
   const endOpacity = useTransform(p, range([0.72, 0.88], [0, 1]));
   const endY = useTransform(p, range([0.72, 0.88], [60, 0]));
 
-  // Pointer pans the footage inside the letters
-  const px = useSpring(useMotionValue(50), { stiffness: 50, damping: 20 });
-  const py = useSpring(useMotionValue(50), { stiffness: 50, damping: 20 });
-  const bgPos = useMotionTemplate`${px}% ${py}%`;
-
   const tc = `00:00:${String(Math.floor((cut * CUT_MS) / 1000) % 60).padStart(2, '0')}:${String(cut * 7 % 25).padStart(2, '0')}`;
+
+  const wordStyle = (index: number): React.CSSProperties => ({
+    // Hairline stroke keeps the word legible when a still is dark
+    WebkitTextStroke: '1px rgba(243,244,246,0.4)',
+    backgroundImage: `linear-gradient(rgba(243,244,246,.16), rgba(243,244,246,.16)), url(${PROJECTS[index].thumbnail})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    WebkitBackgroundClip: 'text',
+    backgroundClip: 'text',
+    color: 'transparent',
+  });
 
   return (
     <section
@@ -56,16 +91,11 @@ export default function Hero() {
       ref={ref}
       aria-label="Introduction"
       className={reduced ? 'relative' : 'relative h-[260vh]'}
-      onPointerMove={(e) => {
-        if (!fine || reduced) return;
-        px.set(30 + (e.clientX / window.innerWidth) * 40);
-        py.set(30 + (e.clientY / window.innerHeight) * 40);
-      }}
     >
       <div className="sticky top-0 flex h-[100svh] min-h-[560px] flex-col overflow-hidden px-4 pb-6 pt-24 md:px-10 md:pb-10 md:pt-28">
         {/* Full-bleed plate the camera lands on */}
-        <motion.div aria-hidden style={{ opacity: reduced ? 0 : plateOpacity, scale: plateScale }} className="absolute inset-0">
-          <img src={still} alt="" className="h-full w-full object-cover" />
+        <motion.div aria-hidden style={{ opacity: reduced ? 0 : plateOpacity, scale: plateScale }} className="absolute inset-0 will-change-transform">
+          <img src={still} alt="" decoding="async" className="h-full w-full object-cover" />
           <div className="scanlines absolute inset-0 opacity-60" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-ink/50" />
         </motion.div>
@@ -80,7 +110,7 @@ export default function Hero() {
         <motion.div style={{ opacity: chromeOpacity, y: chromeY }} className="relative z-10 flex items-start justify-between gap-6 font-mono text-[10px] uppercase tracking-[0.3em] text-white/50 md:text-[11px]">
           <div className="space-y-1.5">
             <p><span className="text-secondary">●</span> Premium video editor</p>
-            <p className="hidden sm:block">Motion · Design · Code</p>
+            <p className="hidden sm:block">Edit · Motion · Color · Sound</p>
           </div>
           <div className="space-y-1.5 text-right">
             <p className="tabular-nums text-white/70">TC {tc}</p>
@@ -102,7 +132,7 @@ export default function Hero() {
 
           {/* STORIES — footage inside the letterforms */}
           <motion.h1
-            aria-label="Stories that sell — Dhyan Salavi, video editor and creative technologist"
+            aria-label="Stories that sell — Dhyan Salavi, video editor"
             style={{ scale: reduced ? 1 : wordScale, opacity: reduced ? 1 : wordOpacity, transformOrigin: '54% 55%' }}
             className="relative -ml-[0.04em] will-change-transform"
           >
@@ -110,20 +140,23 @@ export default function Hero() {
               aria-hidden
               initial={{ clipPath: 'inset(100% 0 0 0)', y: '12%' }}
               animate={{ clipPath: 'inset(0% 0 0 0)', y: '0%' }}
-              transition={{ duration: 1.3, ease: [0.83, 0, 0.17, 1], delay: 0.1 }}
-              className="block whitespace-nowrap font-display uppercase leading-[0.8] tracking-[-0.01em] text-[32vw] md:text-[24vw]"
-              style={{
-                // Hairline stroke keeps the word legible when a cut is dark
-                WebkitTextStroke: '1px rgba(243,244,246,0.4)',
-                backgroundImage: `linear-gradient(rgba(243,244,246,.16), rgba(243,244,246,.16)), url(${still})`,
-                backgroundSize: 'cover',
-                backgroundPosition: reduced ? 'center' : (bgPos as unknown as string),
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-              }}
+              transition={{ duration: 1.4, ease: [0.83, 0, 0.17, 1], delay: 0.1 }}
+              className="relative block whitespace-nowrap font-display uppercase leading-[0.8] tracking-[-0.01em] text-[32vw] md:text-[24vw]"
             >
-              Stories
+              {([0, 1] as const).map((layer) => (
+                <span
+                  key={layer}
+                  className={layer === 0 ? 'block' : 'absolute inset-0 block'}
+                  style={{
+                    ...wordStyle(roll[layer]),
+                    opacity: front === layer ? 1 : 0,
+                    transition: `opacity ${DISSOLVE_MS}ms cubic-bezier(0.45, 0, 0.55, 1)`,
+                    willChange: 'opacity',
+                  }}
+                >
+                  Stories
+                </span>
+              ))}
             </motion.span>
           </motion.h1>
 

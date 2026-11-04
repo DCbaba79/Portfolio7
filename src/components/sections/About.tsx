@@ -4,19 +4,19 @@ import { STATS } from '../../constants';
 import { cn } from '../../lib/utils';
 import { range as lin } from '../../lib/hooks';
 
-const STATEMENT = 'Footage is raw. Code is raw. Ideas are raw. My job is the cut — the decision that turns raw material into something people feel.';
+const STATEMENT = 'Footage is raw. Sound is raw. Light is raw. My job is the cut — the decision that turns raw material into something people feel.';
 
-/** The four disciplines told as one sequence rather than a list of titles. */
+/** The craft told as one sequence — the order a film actually gets made in. */
 const CHAPTERS = [
-  { n: 'I', title: 'The cut', body: 'Commercials, explainers, music videos and event films. Rhythm, color and sound decide whether a viewer stays.' },
-  { n: 'II', title: 'The frame', body: 'Design, branding and creative direction shape how a story looks before it ever moves.' },
-  { n: 'III', title: 'The code', body: 'I build interfaces in React and JavaScript — and bring an editor’s sense of timing to every transition.' },
-  { n: 'IV', title: 'The system', body: 'Now exploring reinforcement learning, computer vision, AI-assisted workflows and cyber-physical systems.' },
+  { n: 'I', title: 'The cut', body: 'Commercials, explainers, music videos and event films. Pacing decides whether a viewer stays past the first three seconds.' },
+  { n: 'II', title: 'The motion', body: 'Kinetic typography and motion graphics that explain an idea faster than a voiceover can.' },
+  { n: 'III', title: 'The color', body: 'Grading for mood — light and tone that tell the audience how to feel before a word is said.' },
+  { n: 'IV', title: 'The sound', body: 'Sound design and audio mastering, because half of every edit is what you hear.' },
 ];
 
 function Word({ children, progress, range }: { children: string; progress: MotionValue<number>; range: [number, number] }) {
   const opacity = useTransform(progress, lin(range, [0.12, 1]));
-  return <motion.span style={{ opacity }} className="mr-[0.22em] inline-block">{children}</motion.span>;
+  return <motion.span style={{ opacity }} className="mr-[0.22em] inline-block will-change-[opacity]">{children}</motion.span>;
 }
 
 function Counter({ value, label }: { value: number; label: string }) {

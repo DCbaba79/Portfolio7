@@ -39,10 +39,13 @@ export default function TimelineScrubber() {
   const [active, setActive] = useState('home');
   const [shown, setShown] = useState(false);
   const dragging = useRef(false);
+  // Cached geometry: reading scrollHeight / clientWidth during scroll forces layout
+  const geo = useRef({ docH: 1, trackW: 0 });
   const { scrollY } = useScroll();
 
   const measure = useCallback(() => {
     const docH = document.documentElement.scrollHeight;
+    geo.current = { docH, trackW: trackRef.current?.clientWidth ?? 0 };
     const next: Clip[] = [];
     TIMELINE_SECTIONS.forEach((s, i) => {
       const el = document.getElementById(s.id);
@@ -59,13 +62,14 @@ export default function TimelineScrubber() {
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(document.body);
+    if (trackRef.current) ro.observe(trackRef.current);
     return () => ro.disconnect();
   }, [measure]);
 
   const update = useCallback((y: number) => {
-    const docH = document.documentElement.scrollHeight;
+    const { docH, trackW } = geo.current;
     const f = (y + window.innerHeight / 2) / docH;
-    if (playheadRef.current) playheadRef.current.style.transform = `translate3d(${f * (trackRef.current?.clientWidth ?? 0)}px,0,0)`;
+    if (playheadRef.current) playheadRef.current.style.transform = `translate3d(${f * trackW}px,0,0)`;
     if (tcRef.current) tcRef.current.textContent = toTimecode(y / Math.max(1, docH - window.innerHeight));
     // Stay out of the way of the hero's first impression
     setShown(y > window.innerHeight * 0.5);

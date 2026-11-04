@@ -90,7 +90,7 @@ export default function Navbar() {
             </span>
             <span className="flex flex-col leading-none">
               <span className="font-brand text-[13px] font-bold tracking-[0.08em] md:text-sm">DHYAN SALAVI</span>
-              <span className="mt-1 hidden font-mono text-[9px] uppercase tracking-[0.3em] text-white/45 sm:block">Video · Design · Code</span>
+              <span className="mt-1 hidden font-mono text-[9px] uppercase tracking-[0.3em] text-white/45 sm:block">Video Editor · Motion</span>
             </span>
           </a>
 

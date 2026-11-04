@@ -89,7 +89,7 @@ export default function ProjectPage({ id }: { id: string }) {
 
   useEffect(() => {
     if (project) document.title = `${project.title} — Dhyan Salavi`;
-    return () => { document.title = 'Dhyan Salavi — Video Editor, Designer & Creative Technologist'; };
+    return () => { document.title = 'Dhyan Salavi — Video Editor & Motion Designer'; };
   }, [project]);
 
   if (!project) {

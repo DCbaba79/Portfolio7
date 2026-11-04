@@ -12,7 +12,7 @@ export default function Experience() {
           <h2 className="mt-5 font-display text-[24vw] uppercase leading-[0.92] md:text-[13vw] 2xl:text-[12rem]">
             <span className="text-outline">End</span> credits
           </h2>
-          <p className="mt-6 max-w-md font-serif text-xl italic text-white/60">Post-production, frontend engineering and creative leadership — in order of appearance.</p>
+          <p className="mt-6 max-w-md font-serif text-xl italic text-white/60">Post-production, motion and content for startups and creative communities — in order of appearance.</p>
         </div>
 
         <ol className="relative mt-20 md:mt-28">

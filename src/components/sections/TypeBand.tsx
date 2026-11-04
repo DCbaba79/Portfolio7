@@ -1,7 +1,7 @@
 import { motion, useScroll, useSpring, useTransform, useVelocity } from 'motion/react';
 import React from 'react';
 
-const WORDS = ['Edit', 'Motion', 'Story', 'Design', 'Code', 'Color', 'Sound', 'Systems'];
+const WORDS = ['Edit', 'Motion', 'Story', 'Color', 'Sound', 'Rhythm', 'Grade', 'Cut'];
 
 /** Loud full-bleed interlude. Rows run in opposite directions and lean with scroll speed. */
 export default function TypeBand() {

@@ -18,8 +18,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </a>
       <main id="main" className="relative z-10">{children}</main>
 
-      {/* Film grain — a single static texture, no per-frame cost */}
-      <div aria-hidden className="grain pointer-events-none fixed inset-0 z-[90] opacity-[0.06] mix-blend-overlay" />
+      {/* Film grain — plain alpha, no blend mode: a blended full-screen layer
+          forces the whole page to re-composite on every scroll frame */}
+      <div aria-hidden className="grain pointer-events-none fixed inset-0 z-[90] opacity-[0.045]" style={{ transform: 'translateZ(0)' }} />
       <Cursor />
     </div>
   );

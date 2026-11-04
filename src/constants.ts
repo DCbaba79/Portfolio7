@@ -129,15 +129,9 @@ export const EXPERIENCE: ExperienceItem[] = [
     ],
   },
   {
-    role: "Frontend Development Intern",
-    org: "Toshal Infotech",
-    kind: "Engineering",
-    points: [],
-  },
-  {
     role: "Social Media Lead",
     org: "GLA Club, CloudOps, IEEE Photonics",
-    kind: "Leadership",
+    kind: "Content",
     description: "Developing comprehensive digital strategies and creative content to drive engagement and brand awareness across multiple tech communities.",
     points: [
       "Cross-platform content strategy",
@@ -156,24 +150,24 @@ export interface ToolGroup {
 
 export const TOOLKIT: ToolGroup[] = [
   {
-    id: "video",
-    label: "Video & Creative",
-    tools: ["DaVinci Resolve", "Premiere Pro", "After Effects", "Motion Graphics", "Visual Storytelling", "Video Production", "Color Grading"],
+    id: "edit",
+    label: "Edit",
+    tools: ["DaVinci Resolve", "Premiere Pro", "Multicam", "Dynamic Editing", "Short-form"],
   },
   {
-    id: "design",
-    label: "Design",
-    tools: ["UI/UX", "Visual Design", "Branding", "Creative Direction", "Photoshop"],
+    id: "motion",
+    label: "Motion & Graphics",
+    tools: ["After Effects", "Motion Graphics", "Kinetic Typography", "Data Viz", "Photoshop"],
   },
   {
-    id: "dev",
-    label: "Development",
-    tools: ["Java", "JavaScript", "Python", "C++", "React", "HTML", "CSS", "SQL"],
+    id: "color",
+    label: "Color & Sound",
+    tools: ["Color Grading", "Sound Design", "Audio Mastering", "Mood"],
   },
   {
-    id: "ai",
-    label: "Engineering & AI",
-    tools: ["Reinforcement Learning", "Computer Vision", "AI-assisted Workflows", "Cyber-Physical Systems"],
+    id: "story",
+    label: "Story",
+    tools: ["Visual Storytelling", "Pacing", "Branding", "Creative Direction"],
   },
 ];
 

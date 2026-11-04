@@ -8,10 +8,10 @@ import { cn } from '../../lib/utils';
  * each tool a clip. No percentages — just what's on the timeline.
  */
 const TRACKS = [
-  { code: 'V2', group: 'design' },
-  { code: 'V1', group: 'video' },
-  { code: 'A1', group: 'dev' },
-  { code: 'A2', group: 'ai' },
+  { code: 'V2', group: 'motion' },
+  { code: 'V1', group: 'edit' },
+  { code: 'A1', group: 'color' },
+  { code: 'A2', group: 'story' },
 ];
 
 export default function Skills() {
@@ -32,7 +32,7 @@ export default function Skills() {
             </h2>
           </div>
           <p className="col-span-12 max-w-sm text-white/55 md:col-span-4 md:ml-auto md:text-right">
-            From pixel-perfect color grading to production code — every tool I reach for, laid out like a session on the timeline.
+            From the first assembly to the final grade and mix — every tool I reach for, laid out like a session on the timeline.
           </p>
         </div>
 
@@ -69,14 +69,21 @@ export default function Skills() {
                     <span className={cn('font-display text-xl', video ? 'text-primary-glow' : 'text-secondary')}>{t.code}</span>
                     <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55">{g.label}</span>
                   </div>
-                  <ul className="flex flex-1 flex-wrap gap-1 p-1.5 lg:flex-nowrap" aria-label={g.label}>
+                  {/* The row watches the viewport: a clip at scaleX(0) has no area to intersect */}
+                  <motion.ul
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: '0px 0px -10% 0px' }}
+                    className="flex flex-1 flex-wrap gap-1 p-1.5 lg:flex-nowrap"
+                    aria-label={g.label}
+                  >
                     {g.tools.map((tool, i) => (
                       <motion.li
                         key={tool}
-                        initial={{ scaleX: 0 }}
-                        whileInView={{ scaleX: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.7, delay: ti * 0.1 + i * 0.05, ease: [0.83, 0, 0.17, 1] }}
+                        variants={{
+                          hidden: { scaleX: 0 },
+                          show: { scaleX: 1, transition: { duration: 0.8, delay: ti * 0.08 + i * 0.06, ease: [0.76, 0, 0.24, 1] } },
+                        }}
                         style={{ flexGrow: tool.length + 6, transformOrigin: 'left' }}
                         onPointerEnter={() => setHover({ track: t.code, idx: i, tool, label: g.label })}
                         onPointerLeave={() => setHover(null)}
@@ -92,7 +99,7 @@ export default function Skills() {
                         <span aria-hidden className={cn('mt-2 block h-1.5 opacity-50', video ? 'bg-[repeating-linear-gradient(90deg,currentColor_0_14px,transparent_14px_16px)]' : 'bg-[repeating-linear-gradient(90deg,currentColor_0_2px,transparent_2px_4px)]')} />
                       </motion.li>
                     ))}
-                  </ul>
+                  </motion.ul>
                 </div>
               );
             })}

@@ -4,7 +4,8 @@ let lenis: Lenis | null = null;
 
 export function initLenis(reducedMotion: boolean) {
   if (lenis || reducedMotion) return lenis;
-  lenis = new Lenis({ duration: 1.15, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  // lerp-based wheel smoothing reads as weightier and steadier than duration easing
+  lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 0.9, smoothWheel: true });
   const raf = (time: number) => {
     lenis?.raf(time);
     if (lenis) requestAnimationFrame(raf);

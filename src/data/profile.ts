@@ -12,7 +12,6 @@ export const PROFILE = {
   instagram: 'https://www.instagram.com/dj79.drp',
   // Add these to enable the matching buttons across the site.
   linkedin: '',
-  github: '',
   // A URL or a file placed in /public (e.g. '/resume.pdf').
   resume: '',
 };
@@ -21,6 +20,5 @@ export const SOCIALS = [
   { label: 'Email', href: `mailto:${PROFILE.email}`, value: PROFILE.email },
   { label: 'Instagram', href: PROFILE.instagram, value: '@dj79.drp' },
   { label: 'LinkedIn', href: PROFILE.linkedin, value: 'Profile' },
-  { label: 'GitHub', href: PROFILE.github, value: 'Code' },
   { label: 'Call', href: PROFILE.phoneHref, value: PROFILE.phone },
 ].filter((s) => Boolean(s.href));
