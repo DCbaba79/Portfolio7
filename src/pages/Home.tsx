@@ -1,33 +1,24 @@
-import React, { useEffect } from 'react';
-import { scrollToSettled } from '../lib/scroll';
-import Hero from '../components/sections/Hero';
-import Portfolio from '../components/sections/Portfolio';
-import About from '../components/sections/About';
-import Experience from '../components/sections/Experience';
-import Skills from '../components/sections/Skills';
-import Contact from '../components/sections/Contact';
-import TypeBand from '../components/sections/TypeBand';
-import TimelineScrubber from '../components/ui/TimelineScrubber';
+import React from 'react';
+import ColdOpen from '../sections/ColdOpen';
+import Filename from '../sections/Filename';
+import Slate from '../sections/Slate';
+import Selects from '../sections/Selects';
+import Range from '../sections/Range';
+import Bin from '../sections/Bin';
+import Credits from '../sections/Credits';
+import PostCredits from '../sections/PostCredits';
 
-export default function Home() {
-  // Deep links like /#contact on first load
-  useEffect(() => {
-    const id = window.location.hash.slice(1);
-    if (!id) return;
-    const t = setTimeout(() => scrollToSettled(id), 120);
-    return () => clearTimeout(t);
-  }, []);
-
+export default function Home({ ready }: { ready: boolean }) {
   return (
-    <>
-      <Hero />
-      <Portfolio />
-      <About />
-      <TypeBand />
-      <Experience />
-      <Skills />
-      <Contact />
-      <TimelineScrubber />
-    </>
+    <main>
+      <ColdOpen ready={ready} />
+      <Filename />
+      <Slate />
+      <Selects />
+      <Range />
+      <Bin />
+      <Credits />
+      <PostCredits />
+    </main>
   );
 }
