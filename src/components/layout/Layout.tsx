@@ -1,51 +1,26 @@
-import { motion, useScroll, useSpring } from 'motion/react';
-import React, { useEffect, useState } from 'react';
-import Lenis from 'lenis';
+import React, { useEffect } from 'react';
+import { initLenis, destroyLenis } from '../../lib/scroll';
+import { useReducedMotion } from '../../lib/hooks';
+import Cursor from '../ui/Cursor';
 
-interface LayoutProps {
-  children: React.ReactNode;
-  key?: string;
-}
-
-
-export default function Layout({ children }: LayoutProps) {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const reduced = useReducedMotion();
 
   useEffect(() => {
-    const lenis = new Lenis();
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
-  }, []);
+    initLenis(reduced);
+    return () => destroyLenis();
+  }, [reduced]);
 
   return (
-    <div className="relative min-h-screen bg-[#030712] overflow-hidden cinematic-gradient">
-      {/* Progress Bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent z-50 origin-left"
-        style={{ scaleX }}
-      />
+    <div className="relative min-h-screen bg-ink">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[300] focus:rounded focus:bg-paper focus:px-4 focus:py-2 focus:text-ink">
+        Skip to content
+      </a>
+      <main id="main" className="relative z-10">{children}</main>
 
-      <main className="relative z-10">
-        {children}
-      </main>
-
-      {/* Background Gradients */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px]" />
-      </div>
+      {/* Film grain — a single static texture, no per-frame cost */}
+      <div aria-hidden className="grain pointer-events-none fixed inset-0 z-[90] opacity-[0.06] mix-blend-overlay" />
+      <Cursor />
     </div>
   );
 }

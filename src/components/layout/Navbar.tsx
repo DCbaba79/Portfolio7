@@ -1,197 +1,192 @@
-import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Youtube, Instagram, Mail } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'motion/react';
+import React, { useEffect, useState } from 'react';
 import { cn } from '../../lib/utils';
+import { useRouter } from '../../lib/router';
+import { scrollToTarget, stopScroll } from '../../lib/scroll';
+import { PROFILE, SOCIALS } from '../../data/profile';
+import Magnetic from '../ui/Magnetic';
+
+const NAV_LINKS = [
+  { name: 'Work', id: 'work' },
+  { name: 'About', id: 'about' },
+  { name: 'Experience', id: 'experience' },
+  { name: 'Toolkit', id: 'toolkit' },
+];
+
+/** Text that rolls up to a duplicate on hover. */
+function RollText({ children }: { children: string }) {
+  return (
+    <span className="relative inline-flex overflow-hidden">
+      <span className="block transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-full">{children}</span>
+      <span aria-hidden className="absolute inset-0 block translate-y-full text-secondary transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0">
+        {children}
+      </span>
+    </span>
+  );
+}
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { path, navigate } = useRouter();
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
+  const [active, setActive] = useState('');
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    setScrolled(y > 40);
+    setHidden(y > 400 && y > prev && !open);
+  });
+
+  // Track which section is in view for the active indicator
+  useEffect(() => {
+    if (path !== '/') return setActive('');
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: '-45% 0px -50% 0px' }
+    );
+    ['home', ...NAV_LINKS.map((l) => l.id), 'contact'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
+  }, [path]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
-      setScrolled(isScrolled);
+    stopScroll(open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }, [open]);
 
-      const sections = ['home', 'work', 'skills', 'roles', 'contact'];
-      let current = '';
-      
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
-
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const offsetTop = element.offsetTop;
-          const height = element.offsetHeight;
-
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + height) {
-            current = section;
-            break;
-          }
-        }
-      }
-
-      if (current === 'stats') current = 'work';
-      if (window.scrollY < 10) current = 'home';
-      
-      setActiveSection((prev) => {
-        if (prev !== current) return current;
-        return prev;
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const navLinks = [
-    { name: 'Home', href: '#home', id: 'home' },
-    { name: 'Work', href: '#work', id: 'work' },
-    { name: 'Skills', href: '#skills', id: 'skills' },
-    { name: 'Roles', href: '#roles', id: 'roles' },
-  ];
+  const go = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (open) {
+      // Release the scroll lock now, not after the effect, so the jump isn't swallowed
+      stopScroll(false);
+      document.body.style.overflow = '';
+      setOpen(false);
+    }
+    if (path === '/') scrollToTarget(id);
+    else navigate(`/#${id}`);
+  };
 
   return (
-    <nav className={cn(
-      "fixed top-0 left-0 w-full z-40 transition-all duration-500",
-      scrolled ? "py-4 bg-[#050505]/80 backdrop-blur-xl" : "py-10 bg-transparent"
-    )}>
-      <div className="max-w-7xl mx-auto px-10 flex justify-between items-center">
-        <motion.a
-          href="#"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-2 md:gap-4 group"
+    <>
+      <motion.header
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: hidden ? -100 : 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed inset-x-0 top-0 z-50"
+      >
+        <div
+          className={cn(
+            'mx-auto flex max-w-[1600px] items-center justify-between px-4 transition-[padding,background-color] duration-500 md:px-10',
+            scrolled ? 'py-3 md:py-4' : 'py-5 md:py-8'
+          )}
         >
-          <div className="w-7 h-7 md:w-10 md:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shadow-lg shadow-primary/10 group-hover:scale-110 transition-transform">
-            <img 
-              src="https://i.postimg.cc/50nzByRk/Chat-GPT-Image-May-2-2026-12-06-49-AM.png" 
-              alt="Logo" 
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                const parent = target.parentElement;
-                if (parent) {
-                  const span = document.createElement('span');
-                  span.className = "font-black text-white text-[10px] md:text-base";
-                  span.innerText = "DS";
-                  parent.appendChild(span);
-                }
-              }}
-            />
-          </div>
-          <span className="text-sm md:text-xl font-black tracking-tighter uppercase text-white group-hover:text-primary transition-colors">DHYAN SALAVI</span>
-        </motion.a>
+          <a href="/" onClick={go('home')} className="group flex items-center gap-3" aria-label={`${PROFILE.name} — home`}>
+            <span className="relative h-9 w-9 overflow-hidden rounded-full border border-white/15 bg-white/5 md:h-10 md:w-10">
+              <img src={PROFILE.logo} alt="" width={40} height={40} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+            </span>
+            <span className="flex flex-col leading-none">
+              <span className="font-display text-[13px] font-bold tracking-[0.08em] md:text-sm">DHYAN SALAVI</span>
+              <span className="mt-1 hidden font-mono text-[9px] uppercase tracking-[0.3em] text-white/45 sm:block">Video · Design · Code</span>
+            </span>
+          </a>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-12 bg-white/[0.03] px-8 py-3 rounded-full">
-          {navLinks.map((link, i) => (
-            <motion.a
-              key={link.name}
-              href={link.href}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: i * 0.1 }}
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(link.id)?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className={cn(
-                "relative text-xs font-sans uppercase tracking-widest transition-all py-1",
-                activeSection === link.id ? "text-primary" : "text-gray-400 hover:text-white"
-              )}
-            >
-              <span className="relative z-10">{link.name}</span>
-              <AnimatePresence>
-                {activeSection === link.id && (
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    exit={{ scaleX: 0 }}
-                    transition={{ 
-                      duration: 0.3,
-                      ease: [0.23, 1, 0.32, 1]
-                    }}
-                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-primary rounded-full shadow-[0_0_10px_rgba(13,148,136,0.5)] origin-center"
-                  />
-                )}
-              </AnimatePresence>
-            </motion.a>
-          ))}
-          <motion.a
-            href="#contact"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-            }}
+          <nav
+            aria-label="Primary"
             className={cn(
-              "relative text-xs font-sans uppercase tracking-widest transition-all py-1",
-              activeSection === 'contact' ? "text-secondary" : "text-gray-400 hover:text-secondary"
+              'hidden items-center gap-1 rounded-full border px-2 py-1.5 transition-colors duration-500 md:flex',
+              scrolled ? 'border-white/10 bg-ink/70 backdrop-blur-md' : 'border-transparent'
             )}
           >
-            <span className="relative z-10">Contact</span>
-            <AnimatePresence>
-              {activeSection === 'contact' && (
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  exit={{ scaleX: 0 }}
-                  transition={{ 
-                    duration: 0.3,
-                    ease: [0.23, 1, 0.32, 1]
-                  }}
-                  className="absolute -bottom-1 left-0 right-0 h-[2px] bg-secondary rounded-full shadow-[0_0_10px_rgba(249,115,22,0.5)] origin-center"
-                />
-              )}
-            </AnimatePresence>
-          </motion.a>
+            {NAV_LINKS.map((link, i) => (
+              <a
+                key={link.id}
+                href={`/#${link.id}`}
+                onClick={go(link.id)}
+                className={cn(
+                  'group relative flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-medium uppercase tracking-[0.18em] transition-colors',
+                  active === link.id ? 'text-white' : 'text-white/55 hover:text-white'
+                )}
+              >
+                <span className="font-mono text-[9px] text-white/30">0{i + 1}</span>
+                <RollText>{link.name}</RollText>
+                {active === link.id && (
+                  <motion.span layoutId="nav-active" className="absolute inset-x-4 -bottom-0.5 h-px bg-primary-bright" transition={{ type: 'spring', stiffness: 400, damping: 35 }} />
+                )}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <Magnetic className="hidden md:block">
+              <a
+                href="/#contact"
+                onClick={go('contact')}
+                className="group flex items-center gap-2.5 rounded-full bg-paper py-2.5 pl-4 pr-5 text-[12px] font-semibold uppercase tracking-[0.14em] text-ink transition-colors duration-300 hover:bg-secondary hover:text-white"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-primary group-hover:bg-white" />
+                </span>
+                <RollText>Available — Let's talk</RollText>
+              </a>
+            </Magnetic>
+
+            <button
+              onClick={() => setOpen((o) => !o)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-ink/60 backdrop-blur md:hidden"
+            >
+              <span className={cn('absolute h-px w-4 bg-white transition-transform duration-500', open ? 'rotate-45' : '-translate-y-1')} />
+              <span className={cn('absolute h-px w-4 bg-white transition-transform duration-500', open ? '-rotate-45' : 'translate-y-1')} />
+            </button>
+          </div>
         </div>
+      </motion.header>
 
-        {/* Mobile Toggle */}
-        <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X /> : <Menu />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
       <AnimatePresence>
-        {isOpen && (
+        {open && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass-card overflow-hidden"
+            id="mobile-menu"
+            initial={{ clipPath: 'inset(0 0 100% 0)' }}
+            animate={{ clipPath: 'inset(0 0 0% 0)' }}
+            exit={{ clipPath: 'inset(0 0 100% 0)' }}
+            transition={{ duration: 0.7, ease: [0.83, 0, 0.17, 1] }}
+            className="fixed inset-0 z-[45] flex flex-col justify-between bg-ink px-4 pb-10 pt-28 md:hidden"
           >
-            <div className="flex flex-col p-6 gap-6">
-              {[...navLinks, { name: 'Contact', href: '#contact', id: 'contact' }].map((link) => (
-                <a 
-                  key={link.name} 
-                  href={link.href} 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsOpen(false);
-                    document.getElementById(link.id)?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className={cn(
-                    "text-xl font-sans uppercase tracking-widest transition-colors",
-                    activeSection === link.id ? "text-primary" : "text-white/60"
-                  )}
+            <nav aria-label="Mobile" className="flex flex-col">
+              {[...NAV_LINKS, { name: 'Contact', id: 'contact' }].map((link, i) => (
+                <motion.a
+                  key={link.id}
+                  href={`/#${link.id}`}
+                  onClick={go(link.id)}
+                  initial={{ y: 40, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.25 + i * 0.06, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex items-baseline gap-4 border-b border-white/10 py-4"
                 >
-                  {link.name}
+                  <span className="font-mono text-xs text-secondary">0{i + 1}</span>
+                  <span className={cn('font-display text-[9vw] font-bold uppercase leading-none', active === link.id ? 'text-primary-bright' : 'text-paper')}>
+                    {link.name}
+                  </span>
+                </motion.a>
+              ))}
+            </nav>
+            <div className="flex flex-wrap gap-x-6 gap-y-3 font-mono text-xs uppercase tracking-[0.2em] text-white/60">
+              {SOCIALS.map((s) => (
+                <a key={s.label} href={s.href} target={s.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" className="hover:text-secondary">
+                  {s.label}
                 </a>
               ))}
-              <div className="flex gap-6 pt-4 border-t border-white/5">
-                <Instagram size={24} className="text-white/40 hover:text-white transition-colors" />
-                <Youtube size={24} className="text-white/40 hover:text-white transition-colors" />
-                <Mail size={24} className="text-white/40 hover:text-white transition-colors" />
-              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 }

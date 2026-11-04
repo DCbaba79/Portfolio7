@@ -1,84 +1,81 @@
 import { motion } from 'motion/react';
-import React from 'react';
-import { SKILLS, Skill } from '../../constants';
-import { WordHighlighter } from '../WordHighlighter';
+import React, { useState } from 'react';
+import { TOOLKIT } from '../../constants';
 import { cn } from '../../lib/utils';
+import { useFinePointer } from '../../lib/hooks';
+import { MaskLines, SectionTag } from '../ui/Reveal';
 
-const SkillTile = ({ skill, index }: { skill: Skill, index: number }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      className="relative group flex flex-col items-center"
-    >
-      <div className={cn(
-        "flex-shrink-0 w-14 h-14 md:w-24 md:h-24 flex items-center justify-center bg-[#111111] rounded-[1rem] md:rounded-[2rem] overflow-hidden border border-white/5 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-110 group-hover:-translate-y-3 cursor-pointer",
-        index % 2 === 0 
-          ? "group-hover:bg-primary group-hover:shadow-[0_0_30px_-5px_rgba(20,184,166,0.8)] group-hover:border-primary/50" 
-          : "group-hover:bg-orange-500 group-hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.8)] group-hover:border-orange-500/50"
-      )}>
-        <div className="w-full h-full flex items-center justify-center transition-all duration-500">
-          {skill.logo ? (
-            <img 
-              src={skill.logo} 
-              alt={skill.name} 
-              className="w-7 h-7 md:w-12 md:h-12 object-contain transition-all duration-500"
-              referrerPolicy="no-referrer"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                const fallback = target.nextElementSibling as HTMLElement;
-                if (fallback) fallback.style.display = 'flex';
-              }}
-            />
-          ) : null}
-          <span 
-            className="text-2xl font-black text-white/40 transition-colors"
-            style={{ display: skill.logo ? 'none' : 'flex' }}
-          >
-            {skill.name.split(' ').map(n => n[0]).join('')}
-          </span>
-        </div>
-      </div>
-
-      {/* Expanding details bubble */}
-      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 overflow-hidden bg-[#0a0a0a]/95 backdrop-blur-xl rounded-2xl border border-white/10 w-48 text-center z-30 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 translate-y-4 group-hover:translate-y-0 shadow-2xl">
-        <div className="p-6">
-          <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-2">{skill.category}</p>
-          <p className="text-lg font-black tracking-tighter text-white truncate px-2">{skill.name}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
+/**
+ * Typographic toolkit: every tool set in one flowing block. Choosing a
+ * discipline lights its tools and dims the rest — no fake percentages.
+ */
 export default function Skills() {
+  const [active, setActive] = useState<string | null>(null);
+  const fine = useFinePointer();
+  const all = TOOLKIT.flatMap((g, gi) => g.tools.map((t) => ({ tool: t, group: g.id, gi })));
+
   return (
-    <section id="skills" className="py-8 md:py-32 px-6 max-w-7xl mx-auto">
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-20">
-        <div className="lg:w-2/5">
-          <h3 className="text-lg md:text-5xl font-display font-black leading-none tracking-tight mb-3 md:mb-10">
-            {"THE ".split(" ").map((word, i) => (
-              <span key={i} className="hover-outline mr-2">{word}</span>
-            ))}
-            <br />
-            {"ARSENAL".split(" ").map((word, i) => (
-              <span key={i} className="text-white/20 hover-outline">{word}</span>
-            ))}
-          </h3>
-          <p className="text-gray-400 text-lg font-light leading-relaxed">
-            <WordHighlighter text="I leverage the industry's most powerful tools to craft cinematic experiences. From pixel-perfect color grading to complex visual effects." />
-          </p>
+    <section id="toolkit" className="relative overflow-hidden border-t border-white/[0.07] px-4 py-24 md:px-10 md:py-40">
+      <div className="mx-auto grid max-w-[1600px] grid-cols-12 gap-y-12 lg:gap-x-8">
+        <div className="col-span-12 lg:col-span-4">
+          <div className="lg:sticky lg:top-32">
+            <SectionTag index="04" label="Creative Toolkit" />
+            <h2 className="mt-6 font-display text-[clamp(2.4rem,10vw,4.5rem)] font-bold lg:text-[4.3vw] 2xl:text-[4.8rem] uppercase leading-[0.9] tracking-[-0.04em]">
+              <MaskLines lines={[<>The</>, <span className="text-outline">arsenal</span>]} />
+            </h2>
+            <p className="mt-6 max-w-sm text-white/55">
+              From pixel-perfect color grading to production code — the tools and disciplines I bring to a project.
+            </p>
+
+            <div className="mt-10 flex flex-wrap gap-2 lg:flex-col lg:items-start" role="group" aria-label="Filter toolkit by discipline">
+              {TOOLKIT.map((g, i) => (
+                <button
+                  key={g.id}
+                  onClick={() => setActive((a) => (a === g.id && !fine ? null : g.id))}
+                  onPointerEnter={(e) => e.pointerType === 'mouse' && setActive(g.id)}
+                  aria-pressed={active === g.id}
+                  className={cn(
+                    'group flex items-center gap-3 rounded-full border px-4 py-2.5 text-left transition-colors duration-300 lg:w-full lg:rounded-none lg:border-x-0 lg:border-t-0 lg:px-0 lg:py-4',
+                    active === g.id ? 'border-primary-bright text-white' : 'border-white/10 text-white/55 hover:text-white'
+                  )}
+                >
+                  <span className={cn('font-mono text-[10px]', i % 2 ? 'text-secondary' : 'text-primary-glow')}>0{i + 1}</span>
+                  <span className="text-sm font-medium uppercase tracking-[0.15em]">{g.label}</span>
+                  <span className="ml-auto hidden font-mono text-[10px] text-white/30 lg:inline">{g.tools.length}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="lg:w-3/5">
-          <div className="flex flex-wrap gap-8 justify-start lg:justify-start">
-            {SKILLS.map((skill, i) => (
-              <SkillTile key={skill.name} skill={skill} index={i} />
-            ))}
-          </div>
+        <div className="col-span-12 lg:col-span-8" onPointerLeave={(e) => e.pointerType === 'mouse' && setActive(null)}>
+          <p className="flex flex-wrap items-baseline gap-x-[0.35em] gap-y-1 text-[clamp(1.7rem,4.2vw,4rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
+            {all.map(({ tool, group, gi }, i) => {
+              const lit = !active || active === group;
+              return (
+                <motion.span
+                  key={tool}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: (i % 10) * 0.03, ease: [0.16, 1, 0.3, 1] }}
+                  className="inline-flex items-baseline"
+                >
+                  <span
+                    className={cn(
+                      'transition-[color,opacity] duration-500',
+                      gi % 2 === 1 && 'font-serif font-bold italic',
+                      lit ? 'opacity-100' : 'opacity-[0.12]',
+                      lit && active ? (gi % 2 ? 'text-secondary' : 'text-primary-glow') : 'text-paper'
+                    )}
+                  >
+                    {tool}
+                  </span>
+                  <span className="ml-[0.35em] text-white/15">/</span>
+                </motion.span>
+              );
+            })}
+          </p>
         </div>
       </div>
     </section>
