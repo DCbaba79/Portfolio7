@@ -274,8 +274,8 @@ export const MARKERS = [
   { id: 'file', label: 'DJ79.drp', tone: 'orange' },
   { id: 'reel', label: 'Showreel', tone: 'paper' },
   { id: 'selects', label: 'Selects', tone: 'teal' },
+  { id: 'index', label: 'The viewer', tone: 'paper' },
   { id: 'range', label: 'Range', tone: 'orange' },
-  { id: 'bin', label: 'The bin', tone: 'paper' },
   { id: 'credits', label: 'Credits', tone: 'teal' },
   { id: 'contact', label: 'Post-credits', tone: 'orange' },
 ] as const;

@@ -18,7 +18,7 @@ export default function Range() {
   return (
     <section id="range" className="safe-x relative bg-paper py-24 text-ink md:py-36">
       <div className="flex items-center justify-between border-b border-ink/15 pb-4">
-        <span className="label text-ink/50">04 — Range</span>
+        <span className="label text-ink/50">05 — Range</span>
         <span className="label text-ink/50">Three registers</span>
       </div>
 

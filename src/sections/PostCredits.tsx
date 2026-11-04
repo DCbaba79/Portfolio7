@@ -39,6 +39,7 @@ export default function PostCredits() {
           <div className="mt-14 flex flex-col gap-4 md:mt-20">
             <a
               href={`mailto:${PROFILE.email}`}
+              data-cursor="Write to me"
               className="group inline-flex w-fit items-baseline gap-4 text-[clamp(1.25rem,3.2vw,2.6rem)] font-medium tracking-[-0.03em]"
             >
               <span className="border-b border-paper/30 pb-1 transition-colors group-hover:border-orange group-hover:text-orange">

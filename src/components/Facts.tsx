@@ -29,6 +29,7 @@ export function OpenCut({ p, className, tone = 'orange' }: { p: Project; classNa
   return (
     <Link
       to={`/work/${p.id}`}
+      data-cursor="Open case"
       className={cn(
         'group inline-flex items-center gap-4 border-b pb-2 text-[15px] font-medium tracking-[-0.01em] transition-colors',
         tone === 'orange' ? 'border-orange/60 hover:border-orange' : 'border-teal-3/60 hover:border-teal-3',

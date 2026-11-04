@@ -85,6 +85,7 @@ export default function Clip({ src, poster, label, className, sound = true, cove
         preload="none"
         aria-label={label}
         onClick={sound ? toggle : undefined}
+        data-cursor={sound ? (muted ? 'Sound on' : 'Sound off') : undefined}
         className={cn('h-full w-full', cover ? 'object-cover' : 'object-contain', sound && 'cursor-pointer')}
       />
       {sound && (

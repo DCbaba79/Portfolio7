@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { MARKERS, PROFILE } from '../data/site';
+import { MARKERS, PROFILE, PROJECTS } from '../data/site';
 import { Link, useRouter } from '../lib/router';
 import { scrollToTarget, stopScroll } from '../lib/scroll';
 import { cn } from '../lib/utils';
@@ -96,6 +96,31 @@ export default function Chrome() {
     requestAnimationFrame(() => scrollToTarget(id));
   };
 
+  // J / L shuttle, the way editors move through a timeline:
+  // on the home page they jump between chapters, on a case page between clips.
+  const { navigate } = useRouter();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || open) return;
+      const t = e.target as HTMLElement;
+      if (t.closest('input, textarea, [contenteditable="true"], [role="slider"]')) return;
+      const k = e.key.toLowerCase();
+      if (k !== 'j' && k !== 'l') return;
+      const dir = k === 'l' ? 1 : -1;
+      if (home) {
+        const i = MARKERS.findIndex((m) => m.id === active);
+        const next = MARKERS[Math.min(MARKERS.length - 1, Math.max(0, i + dir))];
+        scrollToTarget(next.id);
+      } else {
+        const m = path.match(/^\/work\/([^/]+)/);
+        const i = PROJECTS.findIndex((p) => p.id === m?.[1]);
+        if (i >= 0) navigate(`/work/${PROJECTS[(i + dir + PROJECTS.length) % PROJECTS.length].id}`);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [home, active, open, path, navigate]);
+
   const activeLabel = MARKERS.find((m) => m.id === active)?.label;
 
   return (
@@ -115,7 +140,10 @@ export default function Chrome() {
           <div className="hidden text-right sm:block">
             <span ref={tcRef} className="tc block text-[12px] text-paper" aria-hidden>00:00:00:00</span>
             <span className="label mt-1 block text-paper/50">
-              {home ? activeLabel : 'Viewer'}
+              {home ? activeLabel : 'Case file'}
+            </span>
+            <span className="tc mt-2 hidden text-[10px] text-paper/30 lg:block" title="Shuttle like an editor">
+              <kbd className="border border-paper/25 px-1">J</kbd> <kbd className="border border-paper/25 px-1">L</kbd> shuttle
             </span>
           </div>
           {home ? (

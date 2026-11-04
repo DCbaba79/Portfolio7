@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import Chrome from './components/Chrome';
+import Cursor from './components/Cursor';
 import TitleSequence, { shouldPlayTitles } from './components/TitleSequence';
 import Home from './pages/Home';
 import Work from './pages/Work';
@@ -86,6 +87,7 @@ export default function App() {
             Skip to the work
           </a>
           <Chrome />
+          <Cursor />
           <Routes ready={!titles} />
           {titles && <TitleSequence onDone={() => setTitles(false)} />}
         </div>
