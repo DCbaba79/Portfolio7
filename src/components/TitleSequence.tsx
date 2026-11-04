@@ -3,11 +3,12 @@ import { motion } from 'motion/react';
 import { FRAMES, PROFILE } from '../data/site';
 import { stopScroll } from '../lib/scroll';
 
-const SEEN_KEY = 'dj:title-seen';
+/** Minimum time the "Opening DJ79.drp" screen holds, so it reads even when frames are cached. */
+const MIN_LOAD_MS = 1300;
 
+/** Plays on every load of the home page; only skipped for reduced-motion users. */
 export function shouldPlayTitles() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  try { return !sessionStorage.getItem(SEEN_KEY); } catch { return true; }
+  return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 function preload(srcs: string[], timeout = 4000) {
@@ -35,7 +36,6 @@ export default function TitleSequence({ onDone }: { onDone: () => void }) {
   const finish = () => {
     if (done.current) return;
     done.current = true;
-    try { sessionStorage.setItem(SEEN_KEY, '1'); } catch {}
     setStage('out');
   };
 
@@ -44,16 +44,29 @@ export default function TitleSequence({ onDone }: { onDone: () => void }) {
     document.documentElement.style.overflow = 'hidden';
     let alive = true;
     let n = 0;
+    // The bar shows the slower of real loading and a minimum hold, so it always fills smoothly
+    const start = performance.now();
+    let loaded = 0;
+    let raf = 0;
+    const tick = () => {
+      const timed = Math.min(1, (performance.now() - start) / MIN_LOAD_MS);
+      setPct(Math.round(Math.min(timed, loaded) * 100));
+      if (alive && (timed < 1 || loaded < 1)) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
     FRAMES.forEach((s) => {
       const img = new Image();
-      img.onload = img.onerror = () => alive && setPct(Math.round((++n / FRAMES.length) * 100));
+      img.onload = img.onerror = () => { loaded = ++n / FRAMES.length; };
       img.src = s;
     });
-    preload(FRAMES).then(() => alive && setTimeout(() => alive && setStage('flip'), 350));
+    Promise.all([preload(FRAMES), new Promise((r) => setTimeout(r, MIN_LOAD_MS))]).then(
+      () => alive && setTimeout(() => alive && setStage('flip'), 300)
+    );
     const onKey = (e: KeyboardEvent) => (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') && finish();
     window.addEventListener('keydown', onKey);
     return () => {
       alive = false;
+      cancelAnimationFrame(raf);
       window.removeEventListener('keydown', onKey);
     };
   }, []);
