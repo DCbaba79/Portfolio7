@@ -40,7 +40,7 @@ export default function Filename() {
 
         <Fade className="lg:col-span-4" y={50}>
           <figure className="relative mx-auto max-w-[360px] lg:ml-auto">
-            <div className="relative aspect-square overflow-hidden">
+            <div className="frame aspect-square">
               <img
                 src={PROFILE.raccoon}
                 alt="DJ79's mascot: a raccoon in blue sunglasses and an orange hoodie, on a teal background"

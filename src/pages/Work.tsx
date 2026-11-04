@@ -41,7 +41,8 @@ function Viewer({ p }: { p: Project }) {
 
   return (
     <div className={cn('mx-auto', vertical ? 'max-w-[min(420px,72svh*9/16)]' : square ? 'max-w-[min(760px,78svh)]' : 'max-w-6xl')}>
-      <div className="group relative overflow-hidden bg-ink-3">
+      <div className={vertical ? 'frame-reel' : undefined}>
+      <div className={cn('group relative overflow-hidden bg-ink-3', !vertical && (square ? 'frame' : 'frame-cine'))}>
         <video
           ref={ref}
           src={p.film}
@@ -69,6 +70,7 @@ function Viewer({ p }: { p: Project }) {
             </span>
           </button>
         )}
+      </div>
       </div>
       <div className="mt-3 flex items-center gap-4">
         <button type="button" onClick={toggle} className="label w-14 py-1 text-left text-paper/70 hover:text-paper">
@@ -148,11 +150,17 @@ export default function Work({ id }: { id: string }) {
           <Viewer p={p} />
         ) : p.loop ? (
           <div className="mx-auto max-w-6xl">
-            <Clip src={p.loop} poster={p.poster} label={`${p.title} preview`} className={p.aspect === '9/16' ? 'mx-auto aspect-[9/16] max-w-sm' : 'aspect-video'} />
+            {p.aspect === '9/16' ? (
+              <div className="frame-reel mx-auto max-w-sm">
+                <Clip src={p.loop} poster={p.poster} label={`${p.title} preview`} className="aspect-[9/16] w-full" />
+              </div>
+            ) : (
+              <Clip src={p.loop} poster={p.poster} label={`${p.title} preview`} className="frame-cine aspect-video" />
+            )}
             <p className="mt-3 text-[13px] text-paper/50">8-second preview. The full cut is linked below.</p>
           </div>
         ) : (
-          <div className="mx-auto max-w-6xl">
+          <div className="frame-cine mx-auto max-w-6xl">
             <img src={p.poster} alt={`Still from ${p.title}`} className="aspect-video w-full object-cover" />
           </div>
         )}

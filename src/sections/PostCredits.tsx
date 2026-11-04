@@ -18,7 +18,7 @@ export default function PostCredits() {
   };
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-ink-2">
+    <section id="contact" className="relative overflow-hidden bg-ink-2/55">
       <div className="safe-x relative min-h-[100svh] pb-8 pt-24 md:pt-32">
         <div className="flex items-center justify-between border-b border-paper/10 pb-4">
           <span className="label text-paper/45">07 — Post-credits scene</span>

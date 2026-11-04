@@ -28,8 +28,9 @@
   html.lenis, html.lenis body { height: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
+  /* The ink lives on <html>; body stays clear so the ambient light can sit between them */
   body {
-    background: var(--color-ink);
+    background: transparent;
     color: var(--color-paper);
     overflow-x: hidden;
     font-feature-settings: "ss01", "cv11";
@@ -101,6 +102,52 @@
     50% { transform: translate(2%, -3%); }
     75% { transform: translate(-1%, -2%); }
     100% { transform: translate(0, 0); }
+  }
+
+  /* Ambient light: offset ellipses turning slowly read as a shape that breathes */
+  .ambient-morph { animation: ambient-turn 38s linear infinite; }
+  .ambient-morph-rev { animation: ambient-turn 52s linear infinite reverse; }
+  @keyframes ambient-turn {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.08); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  /*
+   * Media frames, one language with four registers:
+   *  .frame-cine   large horizontal footage: hairline, almost square corners
+   *  .frame        standard previews: hairline, restrained radius, soft drop
+   *  .frame-reel   vertical reels: a thin mount around the clip, nested radius
+   *  .frame-thumb  small stills: hairline, small radius
+   * All share the same hairline colour and the ink-3 surface behind media.
+   */
+  .frame-cine, .frame, .frame-thumb, .frame-reel {
+    position: relative;
+    isolation: isolate;
+  }
+  .frame-cine, .frame, .frame-thumb {
+    overflow: hidden;
+    background: var(--color-ink-3);
+  }
+  .frame-cine { border-radius: 3px; }
+  .frame { border-radius: 8px; box-shadow: 0 40px 80px -48px rgb(0 0 0 / 0.8); }
+  .frame-thumb { border-radius: 4px; }
+  .frame-reel {
+    border-radius: 16px;
+    padding: 6px;
+    background: rgb(13 19 34 / 0.7);
+    box-shadow: 0 40px 80px -48px rgb(0 0 0 / 0.8);
+  }
+  .frame-reel > * { border-radius: 10px; overflow: hidden; }
+  /* the hairline is drawn over the media, so footage never bleeds past it */
+  .frame-cine::after, .frame::after, .frame-thumb::after, .frame-reel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgb(243 244 246 / 0.1);
+    pointer-events: none;
   }
 
   /* Clapper stripes for the slate */

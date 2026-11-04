@@ -80,7 +80,7 @@ export default function Range() {
 
         <div className="lg:col-span-4 lg:col-start-9">
           <div className="lg:sticky lg:top-28">
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden bg-ink">
+            <div className="frame mx-auto aspect-[4/5] w-full max-w-sm">
               <AnimatePresence initial={false}>
                 <motion.video
                   key={current.id}

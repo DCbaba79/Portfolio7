@@ -124,7 +124,7 @@ export default function Viewer() {
   };
 
   return (
-    <section id="index" className="relative bg-ink">
+    <section id="index" className="relative">
       {/* displacement used for the cut between clips */}
       <svg className="absolute h-0 w-0" aria-hidden>
         <filter id="viewer-cut">
@@ -239,7 +239,7 @@ export default function Viewer() {
 
             {/* grading + safe frame */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-ink/40" />
-            <div className="pointer-events-none absolute inset-6 border border-paper/10 md:inset-10" />
+            <div className="pointer-events-none absolute inset-6 rounded-[3px] border border-paper/10 md:inset-10" />
 
             {/* title card, cuts with the clip */}
             <AnimatePresence mode="popLayout" initial={false}>

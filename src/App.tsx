@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import Chrome from './components/Chrome';
 import Cursor from './components/Cursor';
+import Ambient from './components/Ambient';
 import TitleSequence, { shouldPlayTitles } from './components/TitleSequence';
 import Home from './pages/Home';
 import Work from './pages/Work';
@@ -86,6 +87,7 @@ export default function App() {
           <a href="#selects" className="label sr-only fixed left-4 top-4 z-[120] bg-paper p-3 text-ink focus:not-sr-only">
             Skip to the work
           </a>
+          <Ambient />
           <Chrome />
           <Cursor />
           <Routes ready={!titles} />

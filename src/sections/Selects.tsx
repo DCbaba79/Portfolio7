@@ -55,7 +55,7 @@ function PanelNH7({ local }: { local?: Local }) {
         <h3 className="display mt-6 text-[clamp(3rem,min(8vw,14vh),10rem)]">Make<br />something</h3>
       </Layer>
       <Layer local={local} amount={4} className="relative lg:absolute lg:right-0 lg:top-1/2 lg:w-[58vw] lg:-translate-y-1/2">
-        <Clip src={nh7.loop!} poster={nh7.poster} label={`${nh7.title} preview`} className="aspect-video w-full" />
+        <Clip src={nh7.loop!} poster={nh7.poster} label={`${nh7.title} preview`} className="frame-cine aspect-video w-full" />
         <span className="accent pointer-events-none absolute -bottom-[0.35em] right-[-0.05em] text-[clamp(4rem,min(10vw,17vh),12rem)] leading-none">crazy.</span>
       </Layer>
       <Layer local={local} amount={-12} className="relative z-10 mt-10 max-w-sm lg:absolute lg:bottom-[9vh] lg:left-0 lg:mt-0 lg:max-w-[30vw]">
@@ -81,7 +81,7 @@ function PanelAutopsy({ local }: { local?: Local }) {
   return (
     <div className="grid h-full items-center gap-10 lg:grid-cols-12">
       <Layer local={local} amount={5} className="relative lg:col-span-5">
-        <Clip src={autopsy.loop!} poster={autopsy.poster} label={`${autopsy.title} preview`} className="aspect-square w-full lg:max-h-[72vh] lg:w-auto" />
+        <Clip src={autopsy.loop!} poster={autopsy.poster} label={`${autopsy.title} preview`} className="frame aspect-square w-full lg:max-h-[72vh] lg:w-auto" />
         <span className="tc pointer-events-none absolute -left-2 -top-3 rotate-[-4deg] border border-orange bg-ink px-2 py-1 text-[11px] text-orange">
           CASE 002 · V-NEST
         </span>
@@ -119,8 +119,8 @@ function PanelRen({ local }: { local?: Local }) {
         <p className="font-serif text-[clamp(4rem,9vw,10rem)] italic leading-[0.8]">ssance</p>
       </Layer>
       <Layer local={local} amount={3} className="lg:col-span-4">
-        <div className="mx-auto w-full max-w-[min(340px,40vh)] rounded-[28px] border border-paper/15 bg-ink-3 p-2">
-          <Clip src={ren.loop!} poster={ren.poster} label={`${ren.title} preview`} className="aspect-[9/16] w-full rounded-[20px]" />
+        <div className="frame-reel mx-auto w-full max-w-[min(340px,40vh)]">
+          <Clip src={ren.loop!} poster={ren.poster} label={`${ren.title} preview`} className="aspect-[9/16] w-full" />
         </div>
       </Layer>
       <Layer local={local} amount={-14} className="lg:col-span-3 lg:col-start-10">
