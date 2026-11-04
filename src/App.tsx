@@ -10,7 +10,7 @@ import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
 import ProjectPage from './pages/ProjectPage';
 import { RouterProvider, useRouter, consumeHomeScroll } from './lib/router';
-import { scrollToTarget } from './lib/scroll';
+import { scrollToTarget, scrollToSettled } from './lib/scroll';
 
 const WIPE = [0.83, 0, 0.17, 1] as const;
 
@@ -36,7 +36,7 @@ function Curtain() {
           exit: { scaleY: 1, transformOrigin: '50% 100%', transition: { duration: 0.55, ease: WIPE, delay: 0.08 } },
         }}
       >
-        <span className="font-display text-sm font-bold tracking-[0.3em] text-white/80">DHYAN.S</span>
+        <span className="font-brand text-sm font-bold tracking-[0.3em] text-white/80">DHYAN.S</span>
       </motion.div>
     </>
   );
@@ -53,8 +53,8 @@ function Routes() {
     }
     const saved = consumeHomeScroll();
     requestAnimationFrame(() => {
-      if (hash) scrollToTarget(hash.slice(1), { immediate: true });
-      else scrollToTarget(saved ?? 0, { immediate: true });
+      if (hash) scrollToSettled(hash.slice(1));
+      else scrollToSettled(saved ?? 0);
     });
   };
 

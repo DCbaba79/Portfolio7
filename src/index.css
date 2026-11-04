@@ -1,12 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,900&family=Syncopate:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Space+Grotesk:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:ital,wght@1,700;1,900&family=Syncopate:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Space+Grotesk:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Bricolage Grotesque", system-ui, sans-serif;
   --font-serif: "Playfair Display", serif;
   --font-mono: "Space Grotesk", ui-monospace, monospace;
-  --font-display: "Syncopate", sans-serif;
-  --font-heading: "Syncopate", sans-serif;
+  --font-display: "Anton", "Impact", sans-serif;   /* condensed display */
+  --font-brand: "Syncopate", sans-serif;           /* wordmark only */
+  --font-heading: "Anton", "Impact", sans-serif;
 
   /* Brand palette — preserved from the original site */
   --color-primary: #0d9488;       /* Teal */
@@ -130,6 +131,22 @@
     right: 0;
     border-bottom: 1px solid;
     border-right: 1px solid;
+  }
+
+  .text-outline-orange {
+    -webkit-text-stroke: 1.5px var(--color-secondary);
+    color: transparent;
+  }
+
+  /* Vertical editorial label */
+  .vertical {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  /* Very subtle CRT-style scanlines for media */
+  .scanlines {
+    background-image: repeating-linear-gradient(to bottom, rgba(0,0,0,0.22) 0 1px, transparent 1px 3px);
   }
 
   .grain {

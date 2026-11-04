@@ -1,265 +1,198 @@
-import { motion, useMotionValue, useScroll, useSpring, useTransform, AnimatePresence } from 'motion/react';
+import { motion, useMotionValue, useScroll, useSpring, useTransform, useMotionTemplate } from 'motion/react';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { PROJECTS } from '../../constants';
 import { PROFILE } from '../../data/profile';
-import { Link } from '../../lib/router';
 import { scrollToTarget } from '../../lib/scroll';
-import { useFinePointer, useReducedMotion } from '../../lib/hooks';
-import { MaskLines } from '../ui/Reveal';
+import { useFinePointer, useReducedMotion, range } from '../../lib/hooks';
 import Magnetic from '../ui/Magnetic';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-const DISCIPLINES = ['Video Editing', 'Motion Design', 'Visual Storytelling', 'UI / UX', 'Branding', 'Frontend', 'Computer Vision', 'Reinforcement Learning'];
+const CUT_MS = 720; // hard-cut rhythm inside the type
 
-function Letters({ word, delay, className }: { word: string; delay: number; className?: string }) {
-  return (
-    <span className={className} aria-hidden>
-      {word.split('').map((ch, i) => (
-        <span key={i} className="inline-block overflow-hidden align-bottom">
-          <motion.span
-            className="inline-block"
-            initial={{ y: '105%' }}
-            animate={{ y: '0%' }}
-            transition={{ duration: 1.2, ease: EASE, delay: delay + i * 0.045 }}
-          >
-            {ch}
-          </motion.span>
-        </span>
-      ))}
-    </span>
-  );
-}
-
-/** A monitor-style frame that cuts between real project stills. */
-function NowShowing({ px, py }: { px: any; py: any }) {
-  const [index, setIndex] = useState(0);
+/**
+ * Signature sequence. The tagline "STORIES THAT SELL." is set huge, with real
+ * project stills hard-cutting inside the letterforms. Scrolling pushes the
+ * camera through the type until the footage fills the frame and hands over
+ * to the work exhibition.
+ */
+export default function Hero() {
+  const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
-  const project = PROJECTS[index];
+  const fine = useFinePointer();
+  const [cut, setCut] = useState(0);
+  const still = PROJECTS[cut].thumbnail;
 
   useEffect(() => {
+    // Warm the cache so cuts are instant
+    PROJECTS.forEach((p) => { const i = new Image(); i.src = p.thumbnail; });
     if (reduced) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % PROJECTS.length), 2600);
+    const t = setInterval(() => setCut((c) => (c + 1) % PROJECTS.length), CUT_MS);
     return () => clearInterval(t);
   }, [reduced]);
 
-  return (
-    <motion.div
-      style={{ x: px, y: py }}
-      initial={{ clipPath: 'inset(50% 50% 50% 50%)' }}
-      animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-      transition={{ duration: 1.4, ease: [0.83, 0, 0.17, 1], delay: 0.5 }}
-      className="relative"
-    >
-      <Link
-        to={`/work/${project.id}`}
-        data-cursor="Watch"
-        className="group viewfinder block p-2.5"
-        aria-label={`Now showing: ${project.title}`}
-      >
-        <div className="relative aspect-[16/10] overflow-hidden bg-ink-2">
-          <AnimatePresence initial={false}>
-            <motion.img
-              key={project.id}
-              src={project.thumbnail}
-              alt=""
-              initial={{ clipPath: 'inset(0 0 0 100%)', scale: 1.12 }}
-              animate={{ clipPath: 'inset(0 0 0 0%)', scale: 1 }}
-              exit={{ opacity: 0.4 }}
-              transition={{ duration: 0.9, ease: [0.83, 0, 0.17, 1] }}
-              className="absolute inset-0 h-full w-full object-cover transition-[filter] duration-700 group-hover:saturate-125"
-              decoding="async"
-            />
-          </AnimatePresence>
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/20" />
-          <div className="absolute left-3 top-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-white/80">
-            <span className="h-1.5 w-1.5 rounded-full bg-secondary rec-blink" /> Now showing
-          </div>
-          <div className="absolute right-3 top-3 font-mono text-[10px] tabular-nums text-white/60">
-            {String(index + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}
-          </div>
-          <div className="absolute inset-x-3 bottom-3 flex items-end justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary-glow">{project.category}</p>
-              <p className="truncate text-sm font-semibold md:text-base">{project.title}</p>
-            </div>
-            <ArrowUpRight className="shrink-0 text-white/70 transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-secondary" size={20} />
-          </div>
-        </div>
-        {/* Scrub bar under the frame */}
-        <div className="mt-2 flex gap-1">
-          {PROJECTS.map((p, i) => (
-            <span key={p.id} className="h-0.5 flex-1 overflow-hidden bg-white/10">
-              <motion.span
-                className="block h-full origin-left bg-secondary"
-                initial={false}
-                animate={{ scaleX: i < index ? 1 : i === index ? 1 : 0 }}
-                transition={{ duration: i === index && !reduced ? 2.6 : 0.3, ease: 'linear' }}
-              />
-            </span>
-          ))}
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
+  const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] });
 
-export default function Hero() {
-  const ref = useRef<HTMLElement>(null);
-  const fine = useFinePointer();
-  const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  // Camera push through the word
+  const wordScale = useTransform(p, range([0, 0.7], [1, 7]));
+  const wordOpacity = useTransform(p, range([0.55, 0.72], [1, 0]));
+  const chromeOpacity = useTransform(p, range([0, 0.18], [1, 0]));
+  const chromeY = useTransform(p, range([0, 0.18], [0, -40]));
+  const plateOpacity = useTransform(p, range([0.42, 0.68], [0, 1]));
+  const plateScale = useTransform(p, range([0.42, 1], [1.25, 1]));
+  const endOpacity = useTransform(p, range([0.72, 0.88], [0, 1]));
+  const endY = useTransform(p, range([0.72, 0.88], [60, 0]));
 
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 60, damping: 20 });
-  const sy = useSpring(my, { stiffness: 60, damping: 20 });
-  const frameX = useTransform(sx, (v) => v * 28);
-  const frameY = useTransform(sy, (v) => v * 20);
-  const nameX = useTransform(sx, (v) => v * -12);
+  // Pointer pans the footage inside the letters
+  const px = useSpring(useMotionValue(50), { stiffness: 50, damping: 20 });
+  const py = useSpring(useMotionValue(50), { stiffness: 50, damping: 20 });
+  const bgPos = useMotionTemplate`${px}% ${py}%`;
 
-  const nameY = useTransform(scrollYProgress, [0, 1], ['0%', '35%']);
-  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const tc = `00:00:${String(Math.floor((cut * CUT_MS) / 1000) % 60).padStart(2, '0')}:${String(cut * 7 % 25).padStart(2, '0')}`;
 
   return (
     <section
       id="home"
       ref={ref}
+      aria-label="Introduction"
+      className={reduced ? 'relative' : 'relative h-[260vh]'}
       onPointerMove={(e) => {
         if (!fine || reduced) return;
-        mx.set(e.clientX / window.innerWidth - 0.5);
-        my.set(e.clientY / window.innerHeight - 0.5);
+        px.set(30 + (e.clientX / window.innerWidth) * 40);
+        py.set(30 + (e.clientY / window.innerHeight) * 40);
       }}
-      className="relative flex min-h-[100svh] flex-col overflow-hidden px-4 pb-28 pt-24 md:px-10 md:pb-32 md:pt-28"
     >
-      {/* Backdrop: brand glows + frame guides, no stock imagery */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-[10%] top-[-20%] h-[70vh] w-[70vh] rounded-full bg-primary/15 blur-[140px]" />
-        <div className="absolute -right-[10%] bottom-[-10%] h-[60vh] w-[60vh] rounded-full bg-secondary/10 blur-[140px]" />
-        <div className="absolute inset-x-4 top-1/3 h-px bg-white/[0.06] md:inset-x-10" />
-        <div className="absolute inset-x-4 top-2/3 h-px bg-white/[0.06] md:inset-x-10" />
-        <div className="absolute inset-y-0 left-1/3 w-px bg-white/[0.04]" />
-        <div className="absolute inset-y-0 left-2/3 w-px bg-white/[0.04]" />
-      </div>
-
-      <div className="relative mx-auto flex w-full max-w-[1600px] flex-1 flex-col">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 1 }}
-          className="flex items-center justify-between eyebrow"
-        >
-          <span><span className="text-secondary">●</span> Premium Video Editor</span>
-          <span className="hidden sm:inline">Creative Technologist — Portfolio {new Date().getFullYear()}</span>
+      <div className="sticky top-0 flex h-[100svh] min-h-[560px] flex-col overflow-hidden px-4 pb-6 pt-24 md:px-10 md:pb-10 md:pt-28">
+        {/* Full-bleed plate the camera lands on */}
+        <motion.div aria-hidden style={{ opacity: reduced ? 0 : plateOpacity, scale: plateScale }} className="absolute inset-0">
+          <img src={still} alt="" className="h-full w-full object-cover" />
+          <div className="scanlines absolute inset-0 opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-ink/50" />
         </motion.div>
 
-        {/* Name — the signature typographic element */}
-        <motion.h1
-          style={{ y: nameY, x: nameX, opacity: fade }}
-          className="relative mt-6 select-none font-display font-bold uppercase leading-[0.86] tracking-[-0.04em] md:mt-8"
-          aria-label={PROFILE.name}
-        >
-          <Letters word="Dhyan" delay={0.15} className="block text-[14.5vw] md:text-[11.5vw] 2xl:text-[11.5rem]" />
-          <span className="flex items-end justify-end gap-[3vw]">
+        {/* Frame guides */}
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="absolute inset-x-0 top-1/2 h-px bg-white/[0.05]" />
+          <div className="absolute inset-y-0 left-1/2 w-px bg-white/[0.04]" />
+        </div>
+
+        {/* Slate annotations */}
+        <motion.div style={{ opacity: chromeOpacity, y: chromeY }} className="relative z-10 flex items-start justify-between gap-6 font-mono text-[10px] uppercase tracking-[0.3em] text-white/50 md:text-[11px]">
+          <div className="space-y-1.5">
+            <p><span className="text-secondary">●</span> Premium video editor</p>
+            <p className="hidden sm:block">Motion · Design · Code</p>
+          </div>
+          <div className="space-y-1.5 text-right">
+            <p className="tabular-nums text-white/70">TC {tc}</p>
+            <p className="hidden sm:block">Cut {String(cut + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}</p>
+          </div>
+        </motion.div>
+
+        <div className="relative z-10 flex flex-1 flex-col justify-center">
+          <motion.p style={{ opacity: chromeOpacity }} className="mb-2 font-serif text-[clamp(1.1rem,2.6vw,2.4rem)] italic leading-tight text-white/80 md:mb-1">
             <motion.span
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1, duration: 1, ease: EASE }}
-              className="mb-[1.5vw] hidden font-serif text-[2.4vw] normal-case italic leading-none tracking-normal text-secondary lg:block 2xl:text-4xl"
+              className="inline-block"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 1, ease: EASE }}
             >
-              edits, designs<br />& builds —
+              I don't just edit videos. <span className="text-secondary">I tell</span>
             </motion.span>
-            <Letters word="Salavi" delay={0.35} className="block text-[14.5vw] text-outline md:text-[11.5vw] 2xl:text-[11.5rem]" />
-          </span>
-        </motion.h1>
+          </motion.p>
 
-        <div className="relative mt-8 grid flex-1 grid-cols-1 items-end gap-10 md:mt-6 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-6 xl:col-span-5">
-            <h2 className="font-display text-[clamp(1.35rem,3.2vw,2.6rem)] font-bold uppercase leading-[1.05] tracking-[-0.02em]">
-              <MaskLines
-                immediate
-                delay={0.7}
-                lines={[
-                  <>I don't just edit videos.</>,
-                  <>I tell <span className="orange-to-teal normal-case tracking-normal">stories</span> that sell.</>,
-                ]}
-              />
-            </h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.05, duration: 1, ease: EASE }}
-              className="mt-6 max-w-md text-base font-light leading-relaxed text-white/60 md:text-lg"
+          {/* STORIES — footage inside the letterforms */}
+          <motion.h1
+            aria-label="Stories that sell — Dhyan Salavi, video editor and creative technologist"
+            style={{ scale: reduced ? 1 : wordScale, opacity: reduced ? 1 : wordOpacity, transformOrigin: '54% 55%' }}
+            className="relative -ml-[0.04em] will-change-transform"
+          >
+            <motion.span
+              aria-hidden
+              initial={{ clipPath: 'inset(100% 0 0 0)', y: '12%' }}
+              animate={{ clipPath: 'inset(0% 0 0 0)', y: '0%' }}
+              transition={{ duration: 1.3, ease: [0.83, 0, 0.17, 1], delay: 0.1 }}
+              className="block whitespace-nowrap font-display uppercase leading-[0.8] tracking-[-0.01em] text-[32vw] md:text-[24vw]"
+              style={{
+                // Hairline stroke keeps the word legible when a cut is dark
+                WebkitTextStroke: '1px rgba(243,244,246,0.4)',
+                backgroundImage: `linear-gradient(rgba(243,244,246,.16), rgba(243,244,246,.16)), url(${still})`,
+                backgroundSize: 'cover',
+                backgroundPosition: reduced ? 'center' : (bgPos as unknown as string),
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}
             >
-              Crafting high-impact cinematic visuals for brands, creators, and elite gaming startups — with a toolkit that spans
-              <span className="text-white"> editing, design, code</span> and <span className="text-white">engineering</span>.
-            </motion.p>
+              Stories
+            </motion.span>
+          </motion.h1>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
+          <motion.div style={{ opacity: chromeOpacity }} className="relative z-10 -mt-[3vw] flex items-end justify-between gap-4">
+            <motion.span
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 1, ease: EASE }}
-              className="mt-8 flex flex-wrap items-center gap-3"
+              transition={{ delay: 0.55, duration: 1.1, ease: EASE }}
+              className="hidden max-w-xs pb-3 text-sm leading-relaxed text-white/60 lg:block"
             >
-              <Magnetic>
-                <a
-                  href="#work"
-                  onClick={(e) => { e.preventDefault(); scrollToTarget('work'); }}
-                  className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-primary px-6 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-white"
-                >
-                  <span className="absolute inset-0 translate-y-full rounded-full bg-secondary transition-transform duration-500 ease-out-expo group-hover:translate-y-0" />
-                  <span className="relative">Explore selected work</span>
-                  <ArrowDownRight size={18} className="relative transition-transform duration-500 group-hover:rotate-[-45deg]" />
-                </a>
-              </Magnetic>
-              {PROFILE.resume ? (
-                <a
-                  href={PROFILE.resume}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-4 text-sm font-semibold uppercase tracking-[0.14em] transition-colors hover:border-white hover:bg-white hover:text-ink"
-                >
-                  Resume <ArrowUpRight size={16} />
-                </a>
-              ) : (
-                <a
-                  href="#contact"
-                  onClick={(e) => { e.preventDefault(); scrollToTarget('contact'); }}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-4 text-sm font-semibold uppercase tracking-[0.14em] transition-colors hover:border-white hover:bg-white hover:text-ink"
-                >
-                  Hire me <ArrowUpRight size={16} />
-                </a>
-              )}
-            </motion.div>
-          </div>
-
-          <div className="relative lg:col-span-6 lg:col-start-7 xl:col-span-5 xl:col-start-8">
-            <NowShowing px={frameX} py={frameY} />
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.6, duration: 0.8 }}
-              className="absolute -left-3 -top-5 rounded-sm bg-secondary px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-ink md:-left-6"
-            >
-              300,000+ views generated
-            </motion.div>
-          </div>
+              Crafting high-impact cinematic visuals for brands, creators, and elite gaming startups.
+            </motion.span>
+            <span aria-hidden className="ml-auto flex items-baseline gap-[0.18em] font-display uppercase leading-[0.82] text-[18vw] md:text-[10vw]">
+              <motion.span initial={{ y: '100%', opacity: 0 }} animate={{ y: '0%', opacity: 1 }} transition={{ delay: 0.45, duration: 1.1, ease: EASE }}>
+                That
+              </motion.span>
+              <motion.span initial={{ y: '100%', opacity: 0 }} animate={{ y: '0%', opacity: 1 }} transition={{ delay: 0.55, duration: 1.1, ease: EASE }} className="text-outline-orange">
+                Sell.
+              </motion.span>
+            </span>
+          </motion.div>
         </div>
-      </div>
 
-      {/* Discipline ticker */}
-      <div aria-hidden className="absolute inset-x-0 bottom-16 overflow-hidden border-y border-white/[0.07] py-2.5 md:bottom-20">
-        <div className="flex w-max animate-marquee">
-          {[0, 1].map((k) => (
-            <div key={k} className="flex shrink-0 items-center">
-              {DISCIPLINES.map((d) => (
-                <span key={d} className="flex items-center gap-6 px-6 font-mono text-[11px] uppercase tracking-[0.3em] text-white/45">
-                  {d} <span className="text-secondary">✦</span>
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
+        {/* Bottom bar: credit + CTAs */}
+        <motion.div
+          style={{ opacity: chromeOpacity }}
+          className="relative z-10 flex flex-col gap-5 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/50">
+            A film by <span className="text-paper">{PROFILE.name}</span> — 300,000+ views generated
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Magnetic>
+              <a
+                href="#work"
+                onClick={(e) => { e.preventDefault(); scrollToTarget('work'); }}
+                className="group relative inline-flex items-center gap-3 overflow-hidden bg-primary px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-white"
+              >
+                <span className="absolute inset-0 translate-y-full bg-secondary transition-transform duration-500 ease-out-expo group-hover:translate-y-0" />
+                <span className="relative">Explore the work</span>
+                <ArrowDownRight size={16} className="relative transition-transform duration-500 group-hover:-rotate-45" />
+              </a>
+            </Magnetic>
+            <a
+              href={PROFILE.resume || '#contact'}
+              {...(PROFILE.resume ? { target: '_blank', rel: 'noopener noreferrer' } : { onClick: (e: React.MouseEvent) => { e.preventDefault(); scrollToTarget('contact'); } })}
+              className="inline-flex items-center gap-2 border border-white/25 px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] transition-colors hover:border-paper hover:bg-paper hover:text-ink"
+            >
+              {PROFILE.resume ? 'Resume' : 'Hire me'} <ArrowUpRight size={14} />
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Vertical edition label */}
+        <motion.p
+          aria-hidden
+          style={{ opacity: chromeOpacity }}
+          className="vertical absolute right-3 top-1/2 hidden -translate-y-1/2 font-mono text-[10px] uppercase tracking-[0.4em] text-white/35 md:block md:right-5"
+        >
+          Portfolio — Vol. 02 — {new Date().getFullYear()}
+        </motion.p>
+
+        {/* Where the push lands */}
+        {!reduced && (
+          <motion.div style={{ opacity: endOpacity, y: endY }} className="pointer-events-none absolute inset-x-4 top-1/2 z-10 -translate-y-1/2 md:inset-x-10">
+            <p className="font-mono text-[11px] uppercase tracking-[0.35em] text-secondary">Now showing</p>
+            <p className="mt-2 font-display text-[clamp(3rem,11vw,10rem)] uppercase leading-[0.92]">The work ↓</p>
+          </motion.div>
+        )}
       </div>
     </section>
   );

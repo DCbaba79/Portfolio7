@@ -89,7 +89,7 @@ export default function Navbar() {
               <img src={PROFILE.logo} alt="" width={40} height={40} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
             </span>
             <span className="flex flex-col leading-none">
-              <span className="font-display text-[13px] font-bold tracking-[0.08em] md:text-sm">DHYAN SALAVI</span>
+              <span className="font-brand text-[13px] font-bold tracking-[0.08em] md:text-sm">DHYAN SALAVI</span>
               <span className="mt-1 hidden font-mono text-[9px] uppercase tracking-[0.3em] text-white/45 sm:block">Video · Design · Code</span>
             </span>
           </a>
@@ -97,7 +97,7 @@ export default function Navbar() {
           <nav
             aria-label="Primary"
             className={cn(
-              'hidden items-center gap-1 rounded-full border px-2 py-1.5 transition-colors duration-500 md:flex',
+              'hidden items-center gap-1 border px-2 py-1.5 transition-colors duration-500 lg:flex',
               scrolled ? 'border-white/10 bg-ink/70 backdrop-blur-md' : 'border-transparent'
             )}
           >
@@ -107,7 +107,7 @@ export default function Navbar() {
                 href={`/#${link.id}`}
                 onClick={go(link.id)}
                 className={cn(
-                  'group relative flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-medium uppercase tracking-[0.18em] transition-colors',
+                  'group relative flex items-center gap-1.5 px-4 py-2 text-[12px] font-medium uppercase tracking-[0.18em] transition-colors',
                   active === link.id ? 'text-white' : 'text-white/55 hover:text-white'
                 )}
               >
@@ -121,11 +121,11 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Magnetic className="hidden md:block">
+            <Magnetic className="hidden lg:block">
               <a
                 href="/#contact"
                 onClick={go('contact')}
-                className="group flex items-center gap-2.5 rounded-full bg-paper py-2.5 pl-4 pr-5 text-[12px] font-semibold uppercase tracking-[0.14em] text-ink transition-colors duration-300 hover:bg-secondary hover:text-white"
+                className="group flex items-center gap-2.5 bg-paper py-2.5 pl-4 pr-5 text-[12px] font-semibold uppercase tracking-[0.14em] text-ink transition-colors duration-300 hover:bg-secondary hover:text-white"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
@@ -140,7 +140,7 @@ export default function Navbar() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? 'Close menu' : 'Open menu'}
-              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-ink/60 backdrop-blur md:hidden"
+              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-ink/60 backdrop-blur lg:hidden"
             >
               <span className={cn('absolute h-px w-4 bg-white transition-transform duration-500', open ? 'rotate-45' : '-translate-y-1')} />
               <span className={cn('absolute h-px w-4 bg-white transition-transform duration-500', open ? '-rotate-45' : 'translate-y-1')} />
@@ -157,7 +157,7 @@ export default function Navbar() {
             animate={{ clipPath: 'inset(0 0 0% 0)' }}
             exit={{ clipPath: 'inset(0 0 100% 0)' }}
             transition={{ duration: 0.7, ease: [0.83, 0, 0.17, 1] }}
-            className="fixed inset-0 z-[45] flex flex-col justify-between bg-ink px-4 pb-10 pt-28 md:hidden"
+            className="fixed inset-0 z-[45] flex flex-col justify-between bg-ink px-4 pb-10 pt-28 lg:hidden"
           >
             <nav aria-label="Mobile" className="flex flex-col">
               {[...NAV_LINKS, { name: 'Contact', id: 'contact' }].map((link, i) => (
@@ -171,7 +171,7 @@ export default function Navbar() {
                   className="flex items-baseline gap-4 border-b border-white/10 py-4"
                 >
                   <span className="font-mono text-xs text-secondary">0{i + 1}</span>
-                  <span className={cn('font-display text-[9vw] font-bold uppercase leading-none', active === link.id ? 'text-primary-bright' : 'text-paper')}>
+                  <span className={cn('font-display text-[15vw] uppercase leading-[0.9]', active === link.id ? 'text-primary-bright' : 'text-paper')}>
                     {link.name}
                   </span>
                 </motion.a>

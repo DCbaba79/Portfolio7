@@ -38,7 +38,7 @@ function InquiryForm() {
       </div>
       <button
         type="submit"
-        className="group relative mt-4 inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-full bg-primary px-6 py-4 text-sm font-semibold uppercase tracking-[0.15em] text-white"
+        className="group relative mt-4 inline-flex w-full items-center justify-center gap-3 overflow-hidden bg-primary px-6 py-4 text-sm font-semibold uppercase tracking-[0.15em] text-white"
       >
         <span className="absolute inset-0 translate-y-full bg-secondary transition-transform duration-500 ease-out-expo group-hover:translate-y-0" />
         <span className="relative">Compose email</span>
@@ -64,19 +64,17 @@ export default function Contact() {
 
   return (
     <section id="contact" className="relative overflow-hidden border-t border-white/[0.07] px-4 pb-32 pt-24 md:px-10 md:pb-36 md:pt-40">
-      <div aria-hidden className="pointer-events-none absolute -bottom-1/3 left-1/2 h-[80vh] w-[80vh] -translate-x-1/2 rounded-full bg-primary/15 blur-[160px]" />
 
       <div className="relative mx-auto max-w-[1600px]">
         <SectionTag index="05" label="Contact" />
-        <h2 className="mt-8 font-display text-[clamp(2.2rem,8.5vw,9rem)] font-bold uppercase leading-[0.88] tracking-[-0.045em]">
+        <h2 className="mt-8">
           <MaskLines
-            lines={[
-              <>Have an idea?</>,
-              <>Let's make</>,
-              <>something <span className="orange-to-teal normal-case tracking-normal">worth</span></>,
-              <span className="text-outline">remembering.</span>,
-            ]}
+            className="font-display text-[26vw] uppercase leading-[0.92] md:text-[19vw]"
+            lines={[<>Have an</>, <span className="text-outline-orange">idea?</span>]}
           />
+          <span className="mt-6 block max-w-3xl font-serif text-[clamp(1.6rem,4vw,3.6rem)] normal-case italic leading-[1.05] text-paper md:ml-[30%]">
+            Let's make something <span className="text-secondary">worth remembering.</span>
+          </span>
         </h2>
 
         <div className="mt-16 grid grid-cols-12 gap-y-16 md:mt-24 lg:gap-x-8">
@@ -96,7 +94,7 @@ export default function Contact() {
               <button
                 onClick={copy}
                 aria-label="Copy email address"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white hover:text-white"
+                className="flex h-11 w-11 items-center justify-center border border-white/15 text-white/70 transition-colors hover:border-white hover:text-white"
               >
                 {copied ? <Check size={16} className="text-primary-glow" /> : <Copy size={16} />}
               </button>
@@ -118,7 +116,7 @@ export default function Contact() {
                     rel="noopener noreferrer"
                     className="group flex items-center justify-between border-b border-white/10 py-5"
                   >
-                    <span className="font-display text-lg font-bold uppercase tracking-[-0.01em] transition-transform duration-500 ease-out-expo group-hover:translate-x-2 md:text-2xl">
+                    <span className="font-display text-3xl uppercase transition-transform duration-500 ease-out-expo group-hover:translate-x-2 md:text-5xl">
                       {s.label}
                     </span>
                     <span className="flex items-center gap-4 text-white/50 transition-colors group-hover:text-secondary">
@@ -131,7 +129,7 @@ export default function Contact() {
               {PROFILE.resume && (
                 <li>
                   <a href={PROFILE.resume} target="_blank" rel="noopener noreferrer" download className="group flex items-center justify-between border-b border-white/10 py-5">
-                    <span className="font-display text-lg font-bold uppercase transition-transform duration-500 group-hover:translate-x-2 md:text-2xl">Resume</span>
+                    <span className="font-display text-3xl uppercase transition-transform duration-500 group-hover:translate-x-2 md:text-5xl">Resume</span>
                     <span className="flex items-center gap-4 text-white/50 group-hover:text-secondary">
                       <span className="hidden font-mono text-xs sm:inline">PDF</span>
                       <ArrowUpRight size={20} />

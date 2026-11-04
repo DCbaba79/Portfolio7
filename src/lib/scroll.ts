@@ -35,3 +35,15 @@ export function stopScroll(stop: boolean) {
   if (!lenis) return;
   stop ? lenis.stop() : lenis.start();
 }
+
+/**
+ * Jump to a section, then re-anchor once web fonts and late layout settle —
+ * the pinned exhibition's height depends on measured type widths.
+ */
+export function scrollToSettled(target: string | number) {
+  scrollToTarget(target, { immediate: true });
+  const again = () => scrollToTarget(target, { immediate: true });
+  requestAnimationFrame(() => requestAnimationFrame(again));
+  document.fonts?.ready.then(() => requestAnimationFrame(again));
+  setTimeout(again, 700);
+}

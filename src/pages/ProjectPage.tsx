@@ -51,7 +51,7 @@ function Player({ project }: { project: Project }) {
                 aria-label={`Play ${project.title}`}
                 className="group absolute inset-0 flex items-center justify-center"
               >
-                <span className="flex h-20 w-20 items-center justify-center rounded-full bg-primary text-white shadow-2xl shadow-primary/40 transition-transform duration-500 ease-out-expo group-hover:scale-110 md:h-28 md:w-28">
+                <span className="flex h-20 w-20 items-center justify-center bg-primary text-white shadow-2xl shadow-primary/40 transition-transform duration-500 ease-out-expo group-hover:scale-110 md:h-28 md:w-28">
                   <Play size={30} className="ml-1 fill-white" />
                 </span>
               </button>
@@ -64,7 +64,7 @@ function Player({ project }: { project: Project }) {
                   href={source.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-white transition-colors hover:bg-secondary"
+                  className="inline-flex items-center gap-2 bg-primary px-6 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-white transition-colors hover:bg-secondary"
                 >
                   Watch on {source.platform} <ArrowUpRight size={16} />
                 </a>
@@ -96,8 +96,8 @@ export default function ProjectPage({ id }: { id: string }) {
     return (
       <section className="flex min-h-[100svh] flex-col items-start justify-center px-4 md:px-10">
         <p className="eyebrow">404 — Missing footage</p>
-        <h1 className="mt-6 font-display text-[clamp(2.5rem,8vw,7rem)] font-bold uppercase leading-[0.9]">Clip not found</h1>
-        <Link to="/#work" className="mt-10 inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-4 text-sm uppercase tracking-[0.14em] hover:bg-white hover:text-ink">
+        <h1 className="mt-6 font-display text-[clamp(3.5rem,14vw,12rem)] uppercase leading-[0.92]">Clip not found</h1>
+        <Link to="/#work" className="mt-10 inline-flex items-center gap-2 border border-white/20 px-6 py-4 text-sm uppercase tracking-[0.14em] hover:bg-white hover:text-ink">
           <ArrowLeft size={16} /> Back to work
         </Link>
       </section>
@@ -109,8 +109,25 @@ export default function ProjectPage({ id }: { id: string }) {
   const watchHref = source.kind === 'drive' ? source.href : source.kind === 'external' ? source.href : source.kind === 'file' ? source.src : '';
 
   return (
-    <article className="px-4 pb-32 pt-28 md:px-10 md:pt-36">
-      <div className="mx-auto max-w-[1600px]">
+    <article className="relative px-4 pb-32 pt-28 md:px-10 md:pt-36">
+      {/* Full-bleed backdrop: the project's own still, pushed into the dark */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[110vh] overflow-hidden">
+        <motion.img
+          key={project.id}
+          src={project.thumbnail}
+          alt=""
+          initial={{ scale: 1.2, opacity: 0 }}
+          animate={{ scale: 1.05, opacity: 0.32 }}
+          transition={{ duration: 1.8, ease: EASE }}
+          className="h-full w-full object-cover blur-[2px] grayscale-[40%]"
+        />
+        <div className="scanlines absolute inset-0 opacity-70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/40 via-ink/70 to-ink" />
+      </div>
+      <span aria-hidden className="text-outline pointer-events-none absolute right-2 top-20 font-display text-[38vw] leading-none opacity-20 md:right-8 md:text-[26vw]">
+        {String(index + 1).padStart(2, '0')}
+      </span>
+      <div className="relative mx-auto max-w-[1600px]">
         <div className="flex items-center justify-between gap-4">
           <Link to="/#work" className="group inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.25em] text-white/60 hover:text-white">
             <ArrowLeft size={16} className="transition-transform duration-500 group-hover:-translate-x-1" /> All work
@@ -124,7 +141,7 @@ export default function ProjectPage({ id }: { id: string }) {
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="eyebrow">
             <span className="text-secondary">{project.category}</span> — {project.role}
           </motion.p>
-          <h1 className="mt-5 font-display text-[clamp(2.2rem,8vw,8rem)] font-bold uppercase leading-[0.9] tracking-[-0.045em]">
+          <h1 className="mt-5 font-display text-[clamp(3.4rem,12vw,13rem)] uppercase leading-[0.92]">
             <MaskLines immediate delay={0.15} lines={[project.title]} />
           </h1>
           <motion.p
@@ -168,7 +185,7 @@ export default function ProjectPage({ id }: { id: string }) {
                 <dt className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45">Craft</dt>
                 <dd className="mt-3 flex flex-wrap gap-2">
                   {project.skills.map((s) => (
-                    <span key={s} className="rounded-full border border-white/15 px-3 py-1 text-xs text-white/80">{s}</span>
+                    <span key={s} className="border border-white/15 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-white/80">{s}</span>
                   ))}
                 </dd>
               </div>
@@ -178,7 +195,7 @@ export default function ProjectPage({ id }: { id: string }) {
                 href={watchHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex w-full items-center justify-between rounded-full border border-white/20 px-6 py-4 text-sm font-semibold uppercase tracking-[0.14em] transition-colors hover:border-secondary hover:bg-secondary"
+                className="mt-6 inline-flex w-full items-center justify-between border border-white/20 px-6 py-4 text-sm font-semibold uppercase tracking-[0.14em] transition-colors hover:border-secondary hover:bg-secondary"
               >
                 Open original <ArrowUpRight size={16} />
               </a>
@@ -190,7 +207,7 @@ export default function ProjectPage({ id }: { id: string }) {
         <Link to={`/work/${next.id}`} data-cursor="Next" className="group mt-28 block border-t border-white/10 pt-10 md:mt-40">
           <p className="eyebrow">Next project</p>
           <div className="mt-6 grid grid-cols-12 items-end gap-6 lg:gap-8">
-            <h2 className="col-span-12 font-display text-[clamp(2rem,7vw,7rem)] font-bold uppercase leading-[0.9] tracking-[-0.045em] transition-colors duration-500 group-hover:text-primary-glow lg:col-span-8">
+            <h2 className="col-span-12 font-display text-[clamp(3rem,10vw,10rem)] uppercase leading-[0.92] transition-colors duration-500 group-hover:text-primary-glow lg:col-span-8">
               {next.title}
             </h2>
             <div className="col-span-12 overflow-hidden lg:col-span-4">
@@ -206,7 +223,7 @@ export default function ProjectPage({ id }: { id: string }) {
 
         <div className="mt-16 flex justify-center">
           <Magnetic>
-            <Link to="/#contact" className="inline-flex items-center gap-2 rounded-full bg-paper px-6 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-secondary hover:text-white">
+            <Link to="/#contact" className="inline-flex items-center gap-2 bg-paper px-6 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-secondary hover:text-white">
               Start a project <ArrowUpRight size={16} />
             </Link>
           </Magnetic>
