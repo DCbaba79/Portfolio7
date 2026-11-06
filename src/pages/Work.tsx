@@ -134,7 +134,7 @@ export default function Work({ id }: { id: string }) {
         <h1 className="mt-10 max-w-6xl text-[clamp(2.8rem,8vw,8.5rem)] font-semibold leading-[0.88] tracking-[-0.055em] md:mt-14">
           <Line play>{p.short}</Line>
           <Line play delay={0.08} className="mt-3 text-[0.4em] leading-tight tracking-[-0.01em]">
-            <span className="accent">{p.client}</span>
+            <span className="accent">{p.client ?? p.category}</span>
           </Line>
         </h1>
       </header>
@@ -168,8 +168,13 @@ export default function Work({ id }: { id: string }) {
 
       <section className="safe-x mt-20 grid gap-14 md:mt-28 md:grid-cols-12">
         <Fade className="md:col-span-6">
-          <p className="label mb-4 text-orange">Brief</p>
-          <p className="text-[clamp(1.35rem,2.4vw,2.1rem)] leading-[1.18] tracking-[-0.025em]">{p.brief}</p>
+          {p.brief && (
+            <>
+              {/* "Brief" only when there was a client to give one */}
+              <p className="label mb-4 text-orange">{p.client ? 'Brief' : 'The edit'}</p>
+              <p className="text-[clamp(1.35rem,2.4vw,2.1rem)] leading-[1.18] tracking-[-0.025em]">{p.brief}</p>
+            </>
+          )}
           {p.outcome && (
             <>
               <p className="label mb-3 mt-12 text-teal-3">Where it landed</p>
@@ -177,10 +182,12 @@ export default function Work({ id }: { id: string }) {
             </>
           )}
         </Fade>
-        <Fade className="md:col-span-3 md:col-start-7" delay={0.1}>
-          <p className="label mb-4 text-paper/40">Process</p>
-          <Process steps={p.process} />
-        </Fade>
+        {p.process.length > 0 && (
+          <Fade className="md:col-span-3 md:col-start-7" delay={0.1}>
+            <p className="label mb-4 text-paper/40">Process</p>
+            <Process steps={p.process} />
+          </Fade>
+        )}
         <Fade className="md:col-span-3 md:col-start-10" delay={0.2}>
           <MetaGrid p={p} />
           <ul className="mt-8 space-y-3">

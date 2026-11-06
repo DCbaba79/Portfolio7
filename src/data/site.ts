@@ -14,9 +14,14 @@ export const PROFILE = {
   raccoon: '/media/raccoon.webp',
 };
 
-/** Frames pulled from the work itself, used by the title sequence and the hero. */
+/**
+ * Frames pulled from the work itself, used by the title sequence and the hero.
+ * Drawn from the wider archive, not the three selects, so the opening shows
+ * range rather than repeating what the Selects reel already plays.
+ * (f01–f18, the selects, stay on disk but are not used here.)
+ */
 export const FRAMES = [
-  1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29,
+  30, 31, 32, 33, 34, 35, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29,
 ].map((n) => `/media/frames/f${String(n).padStart(2, '0')}.jpg`);
 
 export type Aspect = '16/9' | '1/1' | '9/16';
@@ -26,14 +31,15 @@ export interface Project {
   title: string;
   /** Shorter title for tight spots */
   short: string;
-  client: string;
+  /** Left out when unknown, rather than guessed */
+  client?: string;
   year?: string;
   category: string;
   format: string;
   aspect: Aspect;
   duration?: string;
-  role: string;
-  brief: string;
+  role?: string;
+  brief?: string;
   process: string[];
   tools: string[];
   outcome?: string;
@@ -196,26 +202,121 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'devspace',
-    title: 'DevSpace Trailer',
+    title: 'DevSpace 2026 Trailer',
     short: 'DevSpace',
     client: 'DevLabs, Arizona State University',
     year: '2026',
     category: 'Event promo',
-    format: 'Social trailer',
+    format: 'Horizontal trailer',
     aspect: '16/9',
+    duration: '0:24',
     role: 'Editor',
     brief: 'A promotional event video for DevSpace, organised by DevLabs, built for LinkedIn and X.',
     process: ['Dynamic pacing and seamless transitions around the event’s key moments.'],
     tools: ['DaVinci Resolve'],
-    poster: 'https://i.postimg.cc/jjTXbJ84/Screenshot-2026-05-03-160725.png',
+    loop: '/media/devspace-loop.mp4',
+    poster: '/media/devspace-poster.jpg',
+    film: '/media/devspace.mp4',
     links: [
+      { label: 'Original on Drive', href: 'https://drive.google.com/file/d/1KaYHTk9L6ve2SSvs6BiMqhg1Q6pewqkx/view' },
       { label: 'Watch on LinkedIn', href: 'https://www.linkedin.com/feed/update/urn:li:activity:7432128189302267904/' },
     ],
   },
+
+  /* ——— Added Nov 2026. Only what the videos themselves show is stated; ——— */
+  /* ——— client, year, role and results are left out until confirmed.   ——— */
+  {
+    id: 'messi-yamal',
+    title: 'Messi × Yamal — Phonk Edit',
+    short: 'Messi × Yamal',
+    category: 'Phonk edit',
+    format: 'Vertical edit',
+    aspect: '9/16',
+    duration: '0:23',
+    brief: 'A phonk edit that cuts from Spain’s celebrations to Lamine Yamal and Lionel Messi.',
+    process: [],
+    tools: [],
+    loop: '/media/messi-yamal-loop.mp4',
+    poster: '/media/messi-yamal-poster.jpg',
+    film: '/media/messi-yamal.mp4',
+    links: [{ label: 'Original on Drive', href: 'https://drive.google.com/file/d/11n1fsTfliDmneK8WIoL0p0QZc9V2rWUU/view' }],
+  },
+  {
+    id: 'aizen',
+    title: 'Sōsuke Aizen — Anime Edit',
+    short: 'Sōsuke Aizen',
+    category: 'Anime edit',
+    format: 'Square edit',
+    aspect: '1/1',
+    duration: '0:21',
+    brief: 'An anime edit on the “best manipulator”, building through collage and glitch transitions to Sōsuke Aizen.',
+    process: [],
+    tools: [],
+    loop: '/media/aizen-loop.mp4',
+    poster: '/media/aizen-poster.jpg',
+    film: '/media/aizen.mp4',
+    links: [{ label: 'Original on Drive', href: 'https://drive.google.com/file/d/1NTe0vbGpJagURl0hz21Y3uMH2grO_Apt/view' }],
+  },
+  {
+    id: 'verstappen',
+    title: 'Max Verstappen Edit',
+    short: 'Max Verstappen',
+    category: 'Motorsport edit',
+    format: 'Square edit',
+    aspect: '1/1',
+    duration: '0:26',
+    brief: 'A Formula 1 edit on Max Verstappen, carried by kinetic captions over race footage.',
+    process: [],
+    tools: [],
+    loop: '/media/verstappen-loop.mp4',
+    poster: '/media/verstappen-poster.jpg',
+    film: '/media/verstappen.mp4',
+    links: [{ label: 'Original on Drive', href: 'https://drive.google.com/file/d/1IczRauyDmoZacReth8XH3KHDF0_O-UtF/view' }],
+  },
+  {
+    id: 'calisthenics-coach',
+    title: 'A Day in the Life of a Calisthenics Coach',
+    short: 'Calisthenics Coach',
+    category: 'Talking head · Day in the life',
+    format: 'Vertical vlog',
+    aspect: '9/16',
+    duration: '2:18',
+    brief: 'A day-in-the-life vlog following a calisthenics coach from training to home to the gym floor.',
+    process: [],
+    tools: [],
+    loop: '/media/calisthenics-loop.mp4',
+    poster: '/media/calisthenics-poster.jpg',
+    links: [{ label: 'Watch on Drive', href: 'https://drive.google.com/file/d/15VVp8RtGCNXe9Gaww9izbD0CIyviEwx4/view' }],
+  },
+  {
+    id: 'gla-core-reveal',
+    title: 'GLA 2025–26 Core Reveal',
+    short: 'GLA Core Reveal',
+    client: 'Gujarati Literary Association, VIT Chennai',
+    year: '2025–26',
+    category: 'Team reveal',
+    format: 'Horizontal film',
+    aspect: '16/9',
+    duration: '0:24',
+    brief: 'Introducing the 2025–26 core team, role by role, with typography that moves through each shot.',
+    process: [],
+    tools: [],
+    loop: '/media/gla-core-loop.mp4',
+    poster: '/media/gla-core-poster.jpg',
+    film: '/media/gla-core.mp4',
+    links: [{ label: 'Original on Drive', href: 'https://drive.google.com/file/d/13kKmpZWIbVo1ikyZ8kY-1wghJG5cepMH/view' }],
+  },
+];
+
+/** The archive, in the order the Viewer shows it: newest range first. */
+const ARCHIVE_ORDER = [
+  'messi-yamal', 'aizen', 'verstappen', 'calisthenics-coach', 'gla-core-reveal',
+  'devspace', 'mindflora', 'gla-throwback', 'worn-out',
 ];
 
 export const FEATURED = PROJECTS.filter((p) => p.featured);
-export const ARCHIVE = PROJECTS.filter((p) => !p.featured);
+/** Everything except the three selects, so no section repeats the Selects reel. */
+export const ARCHIVE = ARCHIVE_ORDER.map((id) => PROJECTS.find((p) => p.id === id)!).filter(Boolean);
 export const getProject = (id: string) => PROJECTS.find((p) => p.id === id);
 
 export const RANGE = [
@@ -223,22 +324,22 @@ export const RANGE = [
     id: 'high',
     label: 'High-energy',
     tempo: 'Fast',
-    line: 'Phonk edits and festival recaps. Cut on the beat, landing on the drop.',
-    seenIn: ['nh7-weekender', 'gla-throwback'],
+    line: 'Phonk, anime and motorsport edits. Cut on the beat, landing on the drop.',
+    seenIn: ['messi-yamal', 'verstappen', 'aizen'],
   },
   {
     id: 'talk',
     label: 'Talking head',
     tempo: 'Medium',
     line: 'People on camera, kept watchable to the last second with captions, punch-ins and pacing.',
-    seenIn: ['renaissance'],
+    seenIn: ['calisthenics-coach', 'gla-core-reveal'],
   },
   {
     id: 'humanless',
     label: 'Humanless',
     tempo: 'Precise',
     line: 'Explainers with no one on screen. Just type, motion and a voice.',
-    seenIn: ['startup-autopsy', 'mindflora'],
+    seenIn: ['mindflora'],
   },
 ] as const;
 

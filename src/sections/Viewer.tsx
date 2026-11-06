@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { PROJECTS } from '../data/site';
+import { ARCHIVE } from '../data/site';
 import { useRouter } from '../lib/router';
 import { useFinePointer, useReducedMotion } from '../lib/hooks';
 import { cn } from '../lib/utils';
@@ -31,7 +31,7 @@ export default function Viewer() {
   const [time, setTime] = useState(0);
   const [cut, setCut] = useState(0); // bumps on every cut, drives the glitch
   const drag = useRef(false);
-  const p = PROJECTS[active];
+  const p = ARCHIVE[active];
 
   // Start loading the footage once the viewer is close
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function Viewer() {
       }
     } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
-      pick((active + (e.key === 'ArrowDown' ? 1 : PROJECTS.length - 1)) % PROJECTS.length);
+      pick((active + (e.key === 'ArrowDown' ? 1 : ARCHIVE.length - 1)) % ARCHIVE.length);
     } else if (e.key === 'Enter') {
       navigate(`/work/${p.id}`);
     }
@@ -135,13 +135,13 @@ export default function Viewer() {
 
       <div className="safe-x flex items-center justify-between border-b border-paper/10 pb-4 pt-24 md:pt-28">
         <span className="label text-paper/45">04 — The viewer</span>
-        <span className="label text-paper/45">{PROJECTS.length} clips · {fine ? 'move to scrub' : 'drag to scrub'}</span>
+        <span className="label text-paper/45">{ARCHIVE.length} clips · {fine ? 'move to scrub' : 'drag to scrub'}</span>
       </div>
 
       <div className="relative grid min-h-[100svh] lg:grid-cols-12">
         {/* the index */}
         <ol className="safe-x relative z-20 order-2 flex flex-col justify-center gap-1 py-10 lg:order-1 lg:col-span-4 lg:py-16" aria-label="Project index">
-          {PROJECTS.map((item, i) => (
+          {ARCHIVE.map((item, i) => (
             <li key={item.id}>
               <button
                 type="button"
@@ -210,7 +210,7 @@ export default function Viewer() {
             className="group relative h-[62svh] touch-pan-y overflow-hidden bg-ink-3 outline-none lg:h-[100svh]"
           >
             <div className="absolute inset-0" style={{ filter: glitching ? 'url(#viewer-cut)' : undefined }}>
-              {PROJECTS.map((item, i) =>
+              {ARCHIVE.map((item, i) =>
                 item.loop ? (
                   <video
                     key={item.id}
@@ -252,7 +252,7 @@ export default function Viewer() {
                 transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
               >
                 <span className="tc block bg-ink/70 px-2 py-1 text-[11px] text-paper/80">
-                  {p.client} · {p.format}
+                  {[p.client, p.format].filter(Boolean).join(" · ")}
                 </span>
               </motion.div>
             </AnimatePresence>
