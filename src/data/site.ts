@@ -332,7 +332,7 @@ export const RANGE = [
     label: 'Talking head',
     tempo: 'Medium',
     line: 'People on camera, kept watchable to the last second with captions, punch-ins and pacing.',
-    seenIn: ['calisthenics-coach', 'gla-core-reveal'],
+    seenIn: ['renaissance', 'calisthenics-coach', 'gla-core-reveal'],
   },
   {
     id: 'humanless',
